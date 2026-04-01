@@ -1,54 +1,61 @@
 # app/__init__.py
 
-from flask import Flask, request
+import os
+
+from flask import Flask
+from flask_migrate import Migrate
+import redis
+
 from .conf.config import Config
 from .model.models import db
-from .views_login import login_bp,bcrypt
+from .monitoring import PrometheusMonitor
+from .views_log import Log_bp
+from .views_login import bcrypt, login_bp
+from .views_equipment import Equipment_bp
 from .views_order import Order_bp
 from .views_tools import Tools_bp
-from .views_log import Log_bp
-from flask_migrate import migrate
-import redis
-from prometheus_flask_exporter import PrometheusMetrics
-from .monitoring import PrometheusMonitor
 
 app = None
+migrate = Migrate()
+
+
 def create_app():
-    app = Flask(__name__)
-
-    #app.config["JSON_AS_ASCII"] = False 
-    app.json.ensure_ascii = False   
+    app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(Config)
+    app.json.ensure_ascii = False
 
-    # 初始化监控工具-1
+    os.makedirs(app.instance_path, exist_ok=True)
+
     monitor = PrometheusMonitor()
-    # 初始化监控工具并传入app-2
     monitor.init_app(app)
 
-
-    # 配置DEBUG模式
-    app.config['DEBUG'] = True
-    # 初始化数据库
     db.init_app(app)
-    
-    # 初始化 Bcrypt
     bcrypt.init_app(app)
-    
-    # 初始化 Flask-Migrate
-    migrate.__init__(app, db)
-    
-    # 初始化 Redis
-    app.redis = redis.StrictRedis(host='1.14.155.39', port=6379, db=0,password='lo633533')
+    migrate.init_app(app, db)
 
-    # 注册蓝图
+    app.redis = None
+    if app.config.get("REDIS_ENABLED"):
+        app.redis = redis.StrictRedis(
+            host=app.config["REDIS_HOST"],
+            port=app.config["REDIS_PORT"],
+            db=app.config["REDIS_DB"],
+            password=app.config["REDIS_PASSWORD"],
+            decode_responses=app.config["REDIS_DECODE_RESPONSES"],
+            socket_connect_timeout=1,
+            socket_timeout=1,
+        )
+
     with app.app_context():
         from .views_UserInfo import UserInfo_bp
-        app.register_blueprint(UserInfo_bp,__name__ = 'UserInfo_bp')
 
-    app.register_blueprint(login_bp,__name__ = 'login_bp')
-    app.register_blueprint(Order_bp,__name__ = 'Order_bp')
-    app.register_blueprint(Tools_bp,__name__ = 'tools_bp')
-    app.register_blueprint(Log_bp,__name__ = 'log_bp')
+        db.create_all()
+        app.register_blueprint(UserInfo_bp, __name__="UserInfo_bp")
+
+    app.register_blueprint(login_bp, __name__="login_bp")
+    app.register_blueprint(Order_bp, __name__="Order_bp")
+    app.register_blueprint(Equipment_bp, __name__="Equipment_bp")
+    app.register_blueprint(Tools_bp, __name__="tools_bp")
+    app.register_blueprint(Log_bp, __name__="log_bp")
 
     return app
 
@@ -56,4 +63,3 @@ def create_app():
 def init_app(application):
     global app
     app = application
-

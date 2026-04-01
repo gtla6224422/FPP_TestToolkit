@@ -9,4 +9,7 @@ COPY . .
 
 EXPOSE 5003
 
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5003"]
+ENV FLASK_DEBUG=0
+ENV REDIS_ENABLED=0
+
+CMD ["python", "run.py"]

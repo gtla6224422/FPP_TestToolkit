@@ -1,5 +1,6 @@
-# 允许所有 .py 文件
-!*.py
-
-# 或者仅排除特定文件
-# 而不是排除所有 .py 文件
+__pycache__/
+*.py[cod]
+.pytest_cache/
+myenv/
+instance/
+.env
