@@ -1,5 +1,5 @@
 ﻿<script setup lang="ts">
-import { computed, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import {
   apiDeleteTestcase,
   apiGetEquipment,
@@ -155,6 +155,40 @@ const filteredEquipmentRows = computed(() => {
   }
   return equipmentRows.value.filter((item) => String(item.equipment_id ?? "").toLowerCase().includes(keyword));
 });
+const equipmentOnlineCount = computed(() =>
+  equipmentRows.value.filter((item) => getEquipmentStatusKind(item) === "online").length,
+);
+const equipmentOfflineCount = computed(() =>
+  equipmentRows.value.filter((item) => getEquipmentStatusKind(item) === "offline").length,
+);
+const equipmentUnknownCount = computed(() =>
+  Math.max(equipmentRows.value.length - equipmentOnlineCount.value - equipmentOfflineCount.value, 0),
+);
+const equipmentOnlineRate = computed(() => {
+  const classifiedTotal = equipmentOnlineCount.value + equipmentOfflineCount.value;
+  if (classifiedTotal === 0) {
+    return 0;
+  }
+  return Math.round((equipmentOnlineCount.value / classifiedTotal) * 100);
+});
+const equipmentGaugeStyle = computed(() => ({
+  background: `conic-gradient(#16a34a 0deg ${equipmentOnlineRate.value * 3.6}deg, #f97316 ${equipmentOnlineRate.value * 3.6}deg 360deg)`,
+}));
+const equipmentDashboardHint = computed(() => {
+  if (equipmentLoading.value) {
+    return "正在同步设备状态...";
+  }
+  if (equipmentRows.value.length === 0) {
+    return "还没有设备数据，首页会自动尝试加载一次。";
+  }
+  if (equipmentUnknownCount.value > 0) {
+    return `有 ${equipmentUnknownCount.value} 台设备状态未识别，首页统计已按设备列表中的“在线状态”列口径计算。`;
+  }
+  if (equipmentOfflineCount.value === 0) {
+    return "当前设备全部在线，可以直接进入设备池查看明细。";
+  }
+  return `当前有 ${equipmentOfflineCount.value} 台设备离线，建议优先排查最近未心跳设备。`;
+});
 
 function pretty(data: unknown) {
   return JSON.stringify(data, null, 2);
@@ -250,6 +284,23 @@ function isNavActive(target: PageMode) {
 
 function getEquipmentColumnLabel(column: string) {
   return equipmentColumnLabelMap[column] ?? column;
+}
+
+function getEquipmentStatusKind(item: EquipmentItem): "online" | "offline" | "unknown" {
+  const statusValue = String(item.online_status ?? "").trim().toLowerCase();
+  if (!statusValue) {
+    return "unknown";
+  }
+
+  if (["1", "true", "online", "on", "已在线", "在线", "上线"].some((keyword) => statusValue.includes(keyword))) {
+    return "online";
+  }
+
+  if (["2", "false", "offline", "off", "已离线", "离线"].some((keyword) => statusValue.includes(keyword))) {
+    return "offline";
+  }
+
+  return "unknown";
 }
 
 async function copySqlKitPreview() {
@@ -528,6 +579,12 @@ async function deleteFile(item: TestcaseFileItem) {
     deletingFilePath.value = "";
   }
 }
+
+onMounted(() => {
+  if (equipmentRows.value.length === 0) {
+    void loadEquipment();
+  }
+});
 </script>
 
 <template>
@@ -559,7 +616,7 @@ async function deleteFile(item: TestcaseFileItem) {
       </nav>
 
       <div class="sidebar-foot">
-        <span class="status">当前接口</span>
+        <span class="status">当前环境</span>
         <code>{{ apiBaseUrl }}</code>
       </div>
     </aside>
@@ -603,6 +660,72 @@ async function deleteFile(item: TestcaseFileItem) {
               >
                 云端
               </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="card equipment-gauge-card">
+          <div class="equipment-gauge-header">
+            <div>
+              <h3>已接入设备总览</h3>
+            </div>
+            <div class="actions">
+              <button class="btn-secondary" :disabled="equipmentLoading" @click="loadEquipment">
+                {{ equipmentLoading ? "同步中..." : "刷新状态" }}
+              </button>
+              <button class="btn-primary" :disabled="equipmentLoading" @click="goToEquipmentPage">
+                查看设备池
+              </button>
+            </div>
+          </div>
+
+          <div class="equipment-gauge-layout">
+            <div class="equipment-gauge-wrap">
+              <div class="equipment-gauge" :style="equipmentGaugeStyle">
+                <div class="equipment-gauge-core">
+                  <span class="gauge-value">{{ equipmentRows.length }}</span>
+                  <span class="gauge-label">已接入设备</span>
+                </div>
+              </div>
+              <div class="gauge-rate">
+                <span class="gauge-rate-value">{{ equipmentOnlineRate }}%</span>
+                <span class="gauge-rate-label">在线占比</span>
+              </div>
+            </div>
+
+            <div class="equipment-stat-list">
+              <div class="equipment-stat-item equipment-stat-online">
+                <span class="equipment-stat-dot"></span>
+                <div>
+                  <div class="equipment-stat-value">{{ equipmentOnlineCount }}</div>
+                  <div class="equipment-stat-label">在线设备</div>
+                </div>
+              </div>
+              <div class="equipment-stat-item equipment-stat-offline">
+                <span class="equipment-stat-dot"></span>
+                <div>
+                  <div class="equipment-stat-value">{{ equipmentOfflineCount }}</div>
+                  <div class="equipment-stat-label">离线设备</div>
+                </div>
+              </div>
+              <div class="equipment-stat-item equipment-stat-total">
+                <span class="equipment-stat-dot"></span>
+                <div>
+                  <div class="equipment-stat-value">{{ equipmentRows.length }}</div>
+                  <div class="equipment-stat-label">设备总数</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="equipment-gauge-side">
+              <div class="equipment-side-kicker">Live Monitor</div>
+              <h4>接入状态总览</h4>
+              <p class="status equipment-side-copy">
+                这张卡片会优先展示当前设备规模和离线风险，适合作为首页第一视觉。
+              </p>
+              <p class="status equipment-gauge-hint" :class="[`status-${equipmentMessageTone}`]">
+                {{ equipmentDashboardHint }}
+              </p>
             </div>
           </div>
         </section>

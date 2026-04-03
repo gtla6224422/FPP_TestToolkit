@@ -338,6 +338,182 @@ button:disabled,
     radial-gradient(circle at top right, rgba(37, 99, 235, 0.12), transparent 48%);
 }
 
+.equipment-gauge-card {
+  background:
+    radial-gradient(circle at top right, rgba(34, 197, 94, 0.16), transparent 28%),
+    radial-gradient(circle at left bottom, rgba(249, 115, 22, 0.12), transparent 30%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.97), rgba(244, 250, 255, 0.95));
+  margin-bottom: 16px;
+}
+
+.equipment-gauge-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.equipment-gauge-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 260px) minmax(280px, 380px) minmax(220px, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.equipment-gauge-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.equipment-gauge {
+  width: 196px;
+  height: 196px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.7),
+    0 18px 36px rgba(15, 23, 42, 0.12);
+}
+
+.equipment-gauge-core {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 0 1px rgba(226, 232, 240, 0.9);
+}
+
+.gauge-value {
+  font-size: clamp(2.1rem, 4vw, 2.8rem);
+  line-height: 1;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.gauge-label,
+.gauge-rate-label,
+.equipment-stat-label {
+  margin-top: 6px;
+  font-size: 0.84rem;
+  color: #64748b;
+}
+
+.gauge-rate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.gauge-rate-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f766e;
+}
+
+.equipment-stat-list {
+  display: grid;
+  gap: 12px;
+  align-content: center;
+}
+
+.equipment-stat-item {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid #dbeafe;
+  background: rgba(255, 255, 255, 0.78);
+}
+
+.equipment-stat-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+}
+
+.equipment-stat-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.equipment-stat-online {
+  border-color: rgba(34, 197, 94, 0.22);
+  background: linear-gradient(135deg, rgba(240, 253, 244, 0.95), rgba(220, 252, 231, 0.8));
+}
+
+.equipment-stat-online .equipment-stat-dot {
+  background: #16a34a;
+  box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12);
+}
+
+.equipment-stat-offline {
+  border-color: rgba(249, 115, 22, 0.22);
+  background: linear-gradient(135deg, rgba(255, 247, 237, 0.98), rgba(254, 215, 170, 0.4));
+}
+
+.equipment-stat-offline .equipment-stat-dot {
+  background: #ea580c;
+  box-shadow: 0 0 0 6px rgba(249, 115, 22, 0.12);
+}
+
+.equipment-stat-total {
+  border-color: rgba(37, 99, 235, 0.18);
+  background: linear-gradient(135deg, rgba(239, 246, 255, 0.95), rgba(219, 234, 254, 0.72));
+}
+
+.equipment-stat-total .equipment-stat-dot {
+  background: #2563eb;
+  box-shadow: 0 0 0 6px rgba(37, 99, 235, 0.1);
+}
+
+.equipment-gauge-hint {
+  margin-top: 0;
+}
+
+.equipment-gauge-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: linear-gradient(160deg, rgba(239, 246, 255, 0.92), rgba(255, 255, 255, 0.76));
+  border: 1px solid rgba(191, 219, 254, 0.9);
+}
+
+.equipment-side-kicker {
+  color: #2563eb;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.equipment-gauge-side h4 {
+  font-size: 1.2rem;
+  color: #0f172a;
+}
+
+.equipment-side-copy {
+  line-height: 1.7;
+}
+
+.layout-tools {
+  grid-template-columns: repeat(3, minmax(240px, 1fr));
+}
+
 .manager-card {
   padding: 18px;
 }
@@ -679,7 +855,8 @@ button:disabled,
   .app-shell,
   .sql-kit-grid,
   .sql-kit-bottom-grid,
-  .sql-main-content {
+  .sql-main-content,
+  .equipment-gauge-layout {
     grid-template-columns: 1fr;
   }
 
@@ -703,7 +880,8 @@ button:disabled,
   .list-header,
   .file-row,
   .panel-header,
-  .terminal-line {
+  .terminal-line,
+  .equipment-gauge-header {
     flex-direction: column;
     align-items: flex-start;
     grid-template-columns: 1fr;

@@ -51,13 +51,19 @@ npm run dev
 项目根目录已经提供：
 
 - `Dockerfile`：先构建前端，再将 `frontend/dist` 打进 Flask 容器
-- `docker-compose.yml`：本地构建镜像、加载 `.env`，并通过 Nginx 将外部 `80` 端口转发到内部 `5003`
+- `docker-compose.yml`：本地构建镜像、加载 `.env`，并映射端口 `5003:5003`
 - `.env.example`：环境变量模板
 
 首次使用建议先复制环境变量模板：
 
 ```powershell
 Copy-Item .env.example .env
+```
+
+Linux 服务器上可以使用：
+
+```bash
+cp .env.example .env
 ```
 
 容器启动后，以下目录会持久化到仓库根目录下的 `docker-data/`：
@@ -90,10 +96,29 @@ docker compose ps
 docker compose down
 ```
 
+如果还要删除镜像：
+
+```powershell
+docker rmi fpp-test-toolkit:local
+```
+
+如果镜像仍被容器占用，可以先强制删除容器再删除镜像：
+
+```powershell
+docker rm -f fpp-test-toolkit
+docker rmi fpp-test-toolkit:local
+```
+
 启动后直接访问：
 
 ```text
-http://127.0.0.1
+http://127.0.0.1:5003
+```
+
+服务器部署时访问：
+
+```text
+http://<服务器IP>:5003
 ```
 
 ## 单独构建镜像
@@ -104,8 +129,6 @@ http://127.0.0.1
 docker build -t fpp-test-toolkit:local .
 docker run -p 5003:5003 fpp-test-toolkit:local
 ```
-
-如果不走 `docker compose`，直接运行镜像时仍然需要显式暴露 `5003`。
 
 ## 主要接口
 
