@@ -9,7 +9,7 @@ COPY frontend/ ./
 RUN npm run build
 
 
-FROM python:3.8-slim
+FROM python:3.11-slim
 
 WORKDIR /app/backend
 
