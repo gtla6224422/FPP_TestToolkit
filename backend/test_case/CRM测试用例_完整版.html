@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM系统测试用例 - 全量29个需求用例（完整版）</title>
+    <style>
+        :root{--primary:#2563eb;--primary-light:#dbeafe;--success:#16a34a;--success-light:#dcfce7;--warning:#d97706;--warning-light:#fef3c7;--danger:#dc2626;--danger-light:#fee2e2;--gray-50:#f9fafb;--gray-100:#f3f4f6;--gray-200:#e5e7eb;--gray-500:#6b7280;--gray-700:#374151;--gray-900:#111827}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--gray-50);color:var(--gray-900);line-height:1.6}
+        .header{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;padding:48px 24px;text-align:center}
+        .header h1{font-size:2.5rem;margin-bottom:12px}
+        .header p{opacity:.9;font-size:1.1rem}
+        .header .meta{margin-top:20px;display:flex;gap:32px;justify-content:center;flex-wrap:wrap}
+        .header .meta-item{background:rgba(255,255,255,.15);padding:8px 20px;border-radius:8px;font-size:.95rem}
+        .container{max-width:1400px;margin:0 auto;padding:24px}
+        .toc{background:#fff;border-radius:12px;padding:32px;margin-bottom:32px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .toc h2{font-size:1.4rem;margin-bottom:20px;color:var(--primary)}
+        .toc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+        .toc-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;text-decoration:none;color:var(--gray-700);transition:all .2s;font-size:.92rem}
+        .toc-item:hover{background:var(--primary-light);color:var(--primary)}
+        .toc-item .badge{background:var(--primary);color:#fff;font-size:.75rem;padding:2px 8px;border-radius:999px;min-width:130px;text-align:center}
+        .badge.m1{background:#7c3aed}.badge.m2{background:#0891b2}.badge.m3{background:#059669}.badge.m4{background:#ea580c}.badge.m5{background:#be185d}.badge.m6{background:#4338ca}.badge.m7{background:#15803d}.badge.m8{background:#b91c1c}.badge.m9{background:#a16207}
+        .module-section{margin-bottom:40px}
+        .module-header{background:#fff;border-radius:12px 12px 0 0;padding:20px 28px;border-left:5px solid var(--primary);display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .module-header h2{font-size:1.35rem;color:var(--gray-900)}
+        .module-header .count{background:var(--primary);color:#fff;padding:4px 14px;border-radius:999px;font-size:.85rem;font-weight:600}
+        .case-card{background:#fff;border-radius:0 0 12px 12px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.08);margin-top:-1px}
+        .case-card+.case-card{border-radius:12px;margin-top:12px}
+        .case-title-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:18px;padding-bottom:14px;border-bottom:2px solid var(--gray-100)}
+        .case-title-row h3{font-size:1.15rem;color:var(--gray-900)}
+        .case-id{background:var(--primary-light);color:var(--primary);padding:4px 12px;border-radius:6px;font-size:.82rem;font-weight:600;white-space:nowrap}
+        .case-desc{background:var(--gray-50);padding:14px 18px;border-radius:8px;margin-bottom:20px;font-size:.93rem;color:var(--gray-700);border-left:3px solid var(--primary)}
+        .actor-info{display:flex;gap:20px;margin-bottom:20px;flex-wrap:wrap}
+        .actor-tag{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:6px;font-size:.85rem;background:var(--primary-light);color:var(--primary)}
+        .case-stats{display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+        .stat-badge{padding:4px 12px;border-radius:6px;font-size:.8rem;font-weight:500}
+        .stat-normal{background:#dcfce7;color:#166534}
+        .stat-abnormal{background:#fee2e2;color:#991b1b}
+        .stat-boundary{background:#fef3c7;color:#92400e}
+        .stat-perf{background:#ede9fe;color:#5b21b6}
+        .stat-security{background:#fce7f3;color:#9d174d}
+        .pre-post{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
+        @media(max-width:700px){.pre-post{grid-template-columns:1fr}}
+        .info-box{padding:14px 18px;border-radius:8px;font-size:.9rem}
+        .info-box.pre{background:#ecfdf5;border:1px solid #a7f3d0}
+        .info-box.post{background:#eff6ff;border:1px solid #bfdbfe}
+        .info-box h4{font-size:.85rem;margin-bottom:8px}
+        .info-box.pre h4{color:#059669}.info-box.post h4{color:#2563eb}
+        .info-box ol{padding-left:18px}
+        .info-box li{margin-bottom:4px;color:var(--gray-700);font-size:.88rem}
+        table{width:100%;border-collapse:collapse;margin-top:8px;font-size:.88rem}
+        thead th{background:var(--gray-900);color:#fff;padding:11px 14px;text-align:left;font-weight:600;white-space:nowrap}
+        thead th:first-child{border-radius:8px 0 0 0}thead th:last-child{border-radius:0 8px 0 0}
+        tbody td{padding:11px 14px;border-bottom:1px solid var(--gray-200);vertical-align:top}
+        tbody tr:hover{background:var(--gray-50)}
+        .tc-id{font-weight:600;color:var(--primary);white-space:nowrap;font-size:.82rem}
+        .tc-title{font-weight:500;color:var(--gray-800)}
+        .type-normal{background:var(--success-light);color:var(--success);padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:500}
+        .type-abnormal{background:var(--danger-light);color:var(--danger);padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:500}
+        .type-boundary{background:var(--warning-light);color:var(--warning);padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:500}
+        .type-perf{background:#ede9fe;color:#7c3aed;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:500}
+        .type-security{background:#fce7f3;color:#be185d;padding:3px 10px;border-radius:999px;font-size:.78rem;font-weight:500}
+        .steps-list{list-style:none;padding:0}
+        .steps-list li{position:relative;padding-left:24px;margin-bottom:6px;color:var(--gray-700);font-size:.87rem}
+        .steps-list li::before{content:attr(data-step);position:absolute;left:0;top:0;width:18px;height:18px;background:var(--primary);color:#fff;border-radius:50%;font-size:.72rem;display:flex;align-items:center;justify-content:center;font-weight:600}
+        .expected{color:var(--success);font-weight:500;margin-top:4px;padding-left:24px;font-size:.86rem}
+        .expected.error{color:var(--danger)}
+        .expected.perf{color:#7c3aed}
+        .priority-high{color:var(--danger);font-weight:600}.priority-medium{color:var(--warning);font-weight:600}.priority-low{color:var(--success);font-weight:600}
+        .stats-bar{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:30px 0;padding:20px;background:#fff;border-radius:12px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .stat-item{text-align:center;padding:10px 24px}
+        .stat-num{font-size:2rem;font-weight:700;color:var(--primary)}.stat-label{font-size:.85rem;color:var(--gray-500);margin-top:2px}
+        .footer{text-align:center;padding:30px;color:var(--gray-500);font-size:.88rem;border-top:1px solid var(--gray-200);margin-top:40px}
+        .back-to-top{position:fixed;right:24px;bottom:24px;width:44px;height:44px;background:var(--primary);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 4px 12px rgba(37,99,235,.4);text-decoration:none;font-size:1.2rem;z-index:99}
+        .back-to-top:hover{transform:translateY(-3px)}
+        .rule-section{margin-top:16px;padding:14px 18px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px}
+        .rule-section h4{color:#b45309;font-size:.88rem;margin-bottom:8px}
+        .rule-section ul{padding-left:18px}.rule-section li{margin-bottom:4px;color:var(--gray-700);font-size:.86rem}
+        .type-legend{display:flex;gap:16px;flex-wrap:wrap;padding:16px;background:#fff;border-radius:8px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.1)}
+        .type-legend-item{display:flex;align-items:center;gap:8px;font-size:.85rem}
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>CRM系统测试用例（完整版）</h1>
+    <p>基于UC-CRM-001 ~ UC-CRM-029 需求文档 - 全量覆盖 - 含详细异常流程 - 类型标注清晰</p>
+    <div class="meta">
+        <div class="meta-item">总模块数：9</div>
+        <div class="meta-item">总用例数：29</div>
+        <div class="meta-item">测试场景：800+</div>
+        <div class="meta-item">生成日期：2026-04-02</div>
+    </div>
+</div>
+<div class="container">
+<div class="stats-bar">
+    <div class="stat-item"><div class="stat-num">9</div><div class="stat-label">功能模块</div></div>
+    <div class="stat-item"><div class="stat-num">29</div><div class="stat-label">需求用例</div></div>
+    <div class="stat-item"><div class="stat-num">800+</div><div class="stat-label">测试场景</div></div>
+    <div class="stat-item"><div class="stat-num">5</div><div class="stat-label">测试类型</div></div>
+</div>
+
+<div class="type-legend">
+    <div class="type-legend-item"><span class="type-normal">正常流程</span><span>验证功能正常工作</span></div>
+    <div class="type-legend-item"><span class="type-abnormal">异常流程</span><span>验证错误处理和边界保护</span></div>
+    <div class="type-legend-item"><span class="type-boundary">边界值</span><span>验证输入输出边界</span></div>
+    <div class="type-legend-item"><span class="type-perf">性能测试</span><span>验证响应时间和并发</span></div>
+    <div class="type-legend-item"><span class="type-security">安全权限</span><span>验证权限控制和数据安全</span></div>
+</div>
+
+<div class="toc">
+<h2>用例目录导航</h2>
+<div class="toc-grid">
+<a href="#m1" class="toc-item"><span class="badge m1">M1 客户基础管理</span> 10个用例</a>
+<a href="#m2" class="toc-item"><span class="badge m2">M2 客户池管理</span> 1个用例</a>
+<a href="#m3" class="toc-item"><span class="badge m3">M3 盘点管理</span> 4个用例</a>
+<a href="#m4" class="toc-item"><span class="badge m4">M4 定时任务</span> 2个用例</a>
+<a href="#m5" class="toc-item"><span class="badge m5">M5 拜访与考勤</span> 3个用例</a>
+<a href="#m6" class="toc-item"><span class="badge m6">M6 数据看板</span> 1个用例</a>
+<a href="#m7" class="toc-item"><span class="badge m7">M7 小区物业</span> 3个用例</a>
+<a href="#m8" class="toc-item"><span class="badge m8">M8 标签/导出</span> 2个用例</a>
+<a href="#m9" class="toc-item"><span class="badge m9">M9 小程序端</span> 3个用例</a>
+</div>
+</div>
+
+<!-- ==================== M1: 客户基础管理 ==================== -->
+<div class="module-section" id="m1">
+<div class="module-header"><h2>M1：客户基础管理（UC-CRM-001 ~ UC-CRM-010）</h2><span class="count">10 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>直接报备客户信息</h3><span class="case-id">UC-CRM-001</span></div>
+<div class="case-desc">业务员通过客户管理模块报备新客户，系统自动校验手机号唯一性、分配唯一客户ID、设置60天保护期。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 12</span><span class="stat-badge stat-boundary">边界值: 6</span><span class="stat-badge stat-perf">性能测试: 2</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<div class="pre-post">
+<div class="info-box pre"><h4>前置条件</h4><ol><li>已登录EDMP系统</li><li>系统正常运行</li><li>客户标签配置已完成</li></ol></div>
+<div class="info-box post"><h4>后置条件</h4><ol><li>客户信息保存成功，分配唯一ID</li><li>自动获得60天保护期</li><li>保护期内其他业务员不可抢单</li></ol></div>
+</div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-001-01</td><td class="tc-title">正常报备-完整必填信息</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入客户管理-报备客户</li><li data-step="2">填写名称/手机号(未注册)/企微状态/地图定位地址/类型/标签/描述</li><li data-step="3">点击提交</li></ol></td><td><div class="expected">提示"客户创建成功"</div><div class="expected">自动分配唯一ID+60天保护期</div><div class="expected">状态默认"跟进中"，来源"直接报备"</div></td></tr>
+<tr><td class="tc-id">TC-001-02</td><td class="tc-title">正常报备-仅填必填项</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写所有必填项，选填留空</li><li data-step="2">提交</li></ol></td><td><div class="expected">创建成功，选填字段为空/null</div></td></tr>
+<tr><td class="tc-id">TC-001-03</td><td class="tc-title">正常报备-全部字段填写</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写所有必填项和选填项</li><li data-step="2">提交</li></ol></td><td><div class="expected">所有字段数据正确保存</div></td></tr>
+<tr><td class="tc-id">TC-001-04</td><td class="tc-title">异常-手机号重复拦截</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">填写已存在的手机号</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"该客户已存在，不可重复报备"</div></td></tr>
+<tr><td class="tc-id">TC-001-05</td><td class="tc-title">异常-客户名称为空</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">客户名称留空</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"请填写所有必填项"，字段标红</div></td></tr>
+<tr><td class="tc-id">TC-001-06</td><td class="tc-title">异常-手机号为空</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">手机号留空</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"请填写所有必填项"</div></td></tr>
+<tr><td class="tc-id">TC-001-07</td><td class="tc-title">异常-地址未定位</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不进行地图定位</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"请填写所有必填项"</div></td></tr>
+<tr><td class="tc-id">TC-001-08</td><td class="tc-title">异常-标签未选择</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不选择任何标签</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"请填写所有必填项"</div></td></tr>
+<tr><td class="tc-id">TC-001-09</td><td class="tc-title">异常-描述为空</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">客户描述留空</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"请填写所有必填项"</div></td></tr>
+<tr><td class="tc-id">TC-001-10</td><td class="tc-title">异常-全部必填为空</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">所有必填字段均不填</li><li data-step="2">直接提交</li></ol></td><td><div class="expected error">所有必填字段均标红</div></td></tr>
+<tr><td class="tc-id">TC-001-11</td><td class="tc-title">异常-手机号非11位(8位)</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">输入"13800138"(8位)</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"手机号格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-001-12</td><td class="tc-title">异常-手机号含字母</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"13800abc000"</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"手机号格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-001-13</td><td class="tc-title">异常-手机号含特殊字符</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"138-0013-8000"</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"手机号格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-001-14</td><td class="tc-title">异常-手机号全0</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"00000000000"</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"手机号格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-001-15</td><td class="tc-title">异常-手机号非11位(12位)</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"138001380001"(12位)</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"手机号格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-001-16</td><td class="tc-title">异常-手机号非1开头</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"23800138000"</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示"手机号格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-001-17</td><td class="tc-title">边界-名称恰好50字符</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入恰好50字符的名称</li><li data-step="2">提交</li></ol></td><td><div class="expected">报备成功，名称完整保存</div></td></tr>
+<tr><td class="tc-id">TC-001-18</td><td class="tc-title">边界-名称超过50字符</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入51字符以上的名称</li><li data-step="2">提交</li></ol></td><td><div class="expected error">截断或提示超长</div></td></tr>
+<tr><td class="tc-id">TC-001-19</td><td class="tc-title">边界-描述恰好500字符</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入恰好500字符的描述</li><li data-step="2">提交</li></ol></td><td><div class="expected">报备成功</div></td></tr>
+<tr><td class="tc-id">TC-001-20</td><td class="tc-title">边界-描述超过500字符</td><td class="type-boundary">边界值</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入501字符以上的描述</li><li data-step="2">提交</li></ol></td><td><div class="expected error">截断或提示超长</div></td></tr>
+<tr><td class="tc-id">TC-001-21</td><td class="tc-title">边界-名称1字符</td><td class="type-boundary">边界值</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入1个字符的名称"张"</li><li data-step="2">提交</li></ol></td><td><div class="expected">报备成功</div></td></tr>
+<tr><td class="tc-id">TC-001-22</td><td class="tc-title">边界-描述1字符</td><td class="type-boundary">边界值</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入1个字符的描述"测"</li><li data-step="2">提交</li></ol></td><td><div class="expected">报备成功</div></td></tr>
+<tr><td class="tc-id">TC-001-23</td><td class="tc-title">性能-响应时间≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写完整信息</li><li data-step="2">点击提交并计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-001-24</td><td class="tc-title">性能-数据完整性验证</td><td class="type-perf">性能测试</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">完成报备后进入详情页</li><li data-step="2">逐字段核对数据一致性</li></ol></td><td><div class="expected">所有字段数据与录入一致无丢失</div></td></tr>
+<tr><td class="tc-id">TC-001-25</td><td class="tc-title">安全-保护期计算准确性</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">完成客户报备</li><li data-step="2">查看保护期开始/结束时间</li></ol></td><td><div class="expected">开始=当天00:00:00，结束=第60天23:59:59</div></td></tr>
+</tbody></table>
+<div class="rule-section"><h4>核心业务规则</h4><ul><li>手机号相同视为同一客户，不可重复报备</li><li>新报备自动获60天保护期，期内他人不可抢单</li><li>类型：渠道/站点负责人/区域负责人/总部负责人</li><li>地址必须地图定位；手机号11位数字</li><li>名称≤50字符；描述≤500字符</li></ul></div>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户列表查询</h3><span class="case-id">UC-CRM-002</span></div>
+<div class="case-desc">业务员和管理员可通过多种筛选条件查询客户分页列表，支持按权限控制可见范围。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、系统管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 5</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 3</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-002-01</td><td class="tc-title">正常-默认加载私海客户</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员进入客户管理模块</li></ol></td><td><div class="expected">默认显示池子状态=空的客户，仅自己的，默认10条/页</div></td></tr>
+<tr><td class="tc-id">TC-002-02</td><td class="tc-title">正常-按名称模糊搜索</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">输入关键字"张"</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">返回名称包含关键字的客户，支持模糊匹配</div></td></tr>
+<tr><td class="tc-id">TC-002-03</td><td class="tc-title">正常-多条件组合筛选AND</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">输入名称+类型+状态等多条件</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">返回同时满足所有条件的客户(AND关系)</div></td></tr>
+<tr><td class="tc-id">TC-002-04</td><td class="tc-title">正常-重置筛选条件</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置多个筛选条件</li><li data-step="2">点击"重置"</li></ol></td><td><div class="expected">所有筛选条件清空，列表恢复默认</div></td></tr>
+<tr><td class="tc-id">TC-002-05</td><td class="tc-title">异常-查询无结果</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入不存在的客户名称</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">显示空列表+"暂无符合条件的客户"</div></td></tr>
+<tr><td class="tc-id">TC-002-06</td><td class="tc-title">异常-名称含特殊字符</td><td class="type-abnormal">异常流程</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入特殊字符"%\'--"</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">正常处理，不报SQL注入错误</div></td></tr>
+<tr><td class="tc-id">TC-002-07</td><td class="tc-title">异常-超长搜索关键字</td><td class="type-abnormal">异常流程</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入1000字符的关键字</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">系统正常处理，不崩溃</div></td></tr>
+<tr><td class="tc-id">TC-002-08</td><td class="tc-title">异常-筛选条件组合无结果</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置多个互斥的筛选条件</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">显示空列表，提示无匹配数据</div></td></tr>
+<tr><td class="tc-id">TC-002-09</td><td class="tc-title">异常-分页参数非法</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">手动修改URL分页参数为负数或非数字</li><li data-step="2">请求页面</li></ol></td><td><div class="expected">系统自动纠正为第1页或提示参数错误</div></td></tr>
+<tr><td class="tc-id">TC-002-10</td><td class="tc-title">边界-分页每页10条</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">确保数据量>10条</li><li data-step="2">选择每页10条并翻页</li></ol></td><td><div class="expected">第1页1-10条，第2页11-20条</div></td></tr>
+<tr><td class="tc-id">TC-002-11</td><td class="tc-title">边界-分页每页50条</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择每页显示50条</li></ol></td><td><div class="expected">每页显示50条记录</div></td></tr>
+<tr><td class="tc-id">TC-002-12</td><td class="tc-title">性能-查询响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">大量数据下执行查询计时</li></ol></td><td><div class="expected perf">查询响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-002-13</td><td class="tc-title">安全-业务员只能看自己的客户</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用业务员A账号登录查看列表</li></ol></td><td><div class="expected">只能看到A负责的客户，看不到他人的</div></td></tr>
+<tr><td class="tc-id">TC-002-14</td><td class="tc-title">安全-部门主管看本部门</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用部门主管账号登录</li></ol></td><td><div class="expected">可看到本部门所有业务员的客户</div></td></tr>
+<tr><td class="tc-id">TC-002-15</td><td class="tc-title">安全-管理员看全部</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用管理员账号登录</li></ol></td><td><div class="expected">可看到全公司所有客户</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户详情查询</h3><span class="case-id">UC-CRM-003</span></div>
+<div class="case-desc">查看客户完整基本信息、标签、跟进历史，支持权限控制和手机号脱敏。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、系统管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-003-01</td><td class="tc-title">正常-查看详情完整信息</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">在客户列表点击目标客户</li></ol></td><td><div class="expected">正确显示基本信息、标签、跟进历史</div></td></tr>
+<tr><td class="tc-id">TC-003-02</td><td class="tc-title">正常-跟进历史按时间倒序</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">打开有拜访记录的客户详情</li></ol></td><td><div class="expected">显示时间/内容/结果，按时间倒序</div></td></tr>
+<tr><td class="tc-id">TC-003-03</td><td class="tc-title">正常-保护期内显示剩余天数</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">打开保护期内的客户详情</li></ol></td><td><div class="expected">显示"保护中"+剩余天数</div></td></tr>
+<tr><td class="tc-id">TC-003-04</td><td class="tc-title">正常-保护期外显示已结束</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">打开保护期已结束的客户详情</li></ol></td><td><div class="expected">显示"保护期已结束"</div></td></tr>
+<tr><td class="tc-id">TC-003-05</td><td class="tc-title">异常-客户不存在或已删除</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">访问不存在或已删除的客户ID</li></ol></td><td><div class="expected error">提示"客户不存在或已被删除"</div></td></tr>
+<tr><td class="tc-id">TC-003-06</td><td class="tc-title">异常-无标签无跟进历史</td><td class="type-abnormal">异常流程</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">打开新建的无标签无历史的客户</li></ol></td><td><div class="expected">标签和历史区域显示为空或"暂无"</div></td></tr>
+<tr><td class="tc-id">TC-003-07</td><td class="tc-title">异常-客户ID格式非法</td><td class="type-abnormal">异常流程</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">访问非法格式的客户ID如"abc123"</li></ol></td><td><div class="expected error">提示客户不存在或参数错误</div></td></tr>
+<tr><td class="tc-id">TC-003-08</td><td class="tc-title">异常-网络异常时加载失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟网络断开</li><li data-step="2">尝试打开客户详情</li></ol></td><td><div class="expected error">提示网络异常，请稍后重试</div></td></tr>
+<tr><td class="tc-id">TC-003-09</td><td class="tc-title">性能-详情查询响应≤1秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击客户进入详情页计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 1秒</div></td></tr>
+<tr><td class="tc-id">TC-003-10</td><td class="tc-title">安全-手机号脱敏显示</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">打开客户详情查看联系电话</li></ol></td><td><div class="expected">中间4位脱敏，如 138****1234</div></td></tr>
+<tr><td class="tc-id">TC-003-11</td><td class="tc-title">安全-无查看权限拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用业务员A访问业务员B的客户</li></ol></td><td><div class="expected error">提示"无权限查看该客户信息"</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户信息编辑</h3><span class="case-id">UC-CRM-004</span></div>
+<div class="case-desc">编辑客户信息，校验合法性，乐观锁防并发，记录审计日志。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、系统管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 7</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 3</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-004-01</td><td class="tc-title">正常-修改客户名称</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入客户详情点击"编辑"</li><li data-step="2">修改客户名称为新值</li><li data-step="3">点击"保存"</li></ol></td><td><div class="expected">提示"保存成功"，名称更新，日志记录</div></td></tr>
+<tr><td class="tc-id">TC-004-02</td><td class="tc-title">正常-修改客户类型</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入编辑模式修改类型</li><li data-step="2">保存</li></ol></td><td><div class="expected">类型更新成功</div></td></tr>
+<tr><td class="tc-id">TC-004-03</td><td class="tc-title">正常-修改手机号</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入编辑模式修改手机号为新的有效号码</li><li data-step="2">保存</li></ol></td><td><div class="expected">手机号更新成功</div></td></tr>
+<tr><td class="tc-id">TC-004-04</td><td class="tc-title">正常-修改地址</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入编辑模式通过地图重新定位地址</li><li data-step="2">保存</li></ol></td><td><div class="expected">地址更新成功</div></td></tr>
+<tr><td class="tc-id">TC-004-05</td><td class="tc-title">异常-必填字段为空</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入编辑模式清空某个必填字段</li><li data-step="2">点击保存</li></ol></td><td><div class="expected error">提示"请填写所有必填字段"，字段标红</div></td></tr>
+<tr><td class="tc-id">TC-004-06</td><td class="tc-title">异常-手机号格式错误</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">将手机号改为非法格式</li><li data-step="2">保存</li></ol></td><td><div class="expected error">提示"联系电话格式不正确"</div></td></tr>
+<tr><td class="tc-id">TC-004-07</td><td class="tc-title">异常-手机号已存在</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">将手机号改为另一客户已有的号码</li><li data-step="2">保存</li></ol></td><td><div class="expected error">提示"客户手机已存在，请修改"</div></td></tr>
+<tr><td class="tc-id">TC-004-08</td><td class="tc-title">异常-并发冲突乐观锁</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">浏览器A打开客户详情并进入编辑</li><li data-step="2">浏览器B打开同一客户并先保存</li><li data-step="3">浏览器A保存</li></ol></td><td><div class="expected error">提示"客户信息已被修改，请刷新后重试"</div></td></tr>
+<tr><td class="tc-id">TC-004-09</td><td class="tc-title">异常-保存失败处理</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟网络异常或服务端错误</li><li data-step="2">点击保存</li></ol></td><td><div class="expected error">提示"保存失败，请稍后重试"</div><div class="expected">保留用户已输入的数据</div></td></tr>
+<tr><td class="tc-id">TC-004-10</td><td class="tc-title">异常-编辑时客户被删除</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入编辑模式</li><li data-step="2">另一用户删除该客户</li><li data-step="3">点击保存</li></ol></td><td><div class="expected error">提示客户不存在或已被删除</div></td></tr>
+<tr><td class="tc-id">TC-004-11</td><td class="tc-title">异常-编辑时客户被他人锁定</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入编辑模式</li><li data-step="2">另一用户同时编辑该客户</li><li data-step="3">尝试保存</li></ol></td><td><div class="expected error">提示客户正在被其他用户编辑</div></td></tr>
+<tr><td class="tc-id">TC-004-12</td><td class="tc-title">异常-修改内容未变化直接保存</td><td class="type-abnormal">异常流程</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">进入编辑模式</li><li data-step="2">不修改任何内容直接保存</li></ol></td><td><div class="expected">提示保存成功（或提示无变更）</div></td></tr>
+<tr><td class="tc-id">TC-004-13</td><td class="tc-title">边界-名称50字符</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">修改名称为恰好50字符</li><li data-step="2">保存</li></ol></td><td><div class="expected">保存成功</div></td></tr>
+<tr><td class="tc-id">TC-004-14</td><td class="tc-title">边界-名称超50字符</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">修改名称为51字符以上</li><li data-step="2">尝试保存</li></ol></td><td><div class="expected error">截断或提示超长</div></td></tr>
+<tr><td class="tc-id">TC-004-15</td><td class="tc-title">性能-编辑保存响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">修改后点击保存计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-004-16</td><td class="tc-title">安全-无编辑权限拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用业务员A访问业务员B的客户</li><li data-step="2">尝试点击"编辑"</li></ol></td><td><div class="expected error">提示"无权限编辑该客户信息"</div></td></tr>
+<tr><td class="tc-id">TC-004-17</td><td class="tc-title">安全-创建时间/人不可修改</td><td class="type-security">安全权限</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入编辑模式查找创建信息字段</li></ol></td><td><div class="expected">创建时间和创建人字段只读或隐藏</div></td></tr>
+<tr><td class="tc-id">TC-004-18</td><td class="tc-title">安全-操作日志记录验证</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">完成编辑后查询操作日志</li></ol></td><td><div class="expected">记录操作人/时间/修改前后数据</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户修改地址审批申请</h3><span class="case-id">UC-CRM-005</span></div>
+<div class="case-desc">直接客户发起地址修改申请，需审批。申请期间地址锁定。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、审批人</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 2</span><span class="stat-badge stat-abnormal">异常流程: 7</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-005-01</td><td class="tc-title">正常-申请→审批通过</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"修改地址"，选新地址+填原因+提交</li><li data-step="2">审批人查看并通过</li></ol></td><td><div class="expected">地址锁定→审批通过后更新→解除锁定</div></td></tr>
+<tr><td class="tc-id">TC-005-02</td><td class="tc-title">正常-申请→审批驳回</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">提交申请后审批人驳回</li></ol></td><td><div class="expected">地址保持原状，锁定解除，业务员收到通知</div></td></tr>
+<tr><td class="tc-id">TC-005-03</td><td class="tc-title">异常-间接客户不能申请</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对间接客户点击"修改地址"</li></ol></td><td><div class="expected error">提示"只有直接客户才能申请地址修改"</div></td></tr>
+<tr><td class="tc-id">TC-005-04</td><td class="tc-title">异常-地址已锁定</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对已有待审批申请的客户再次点击"修改地址"</li></ol></td><td><div class="expected error">提示"该客户地址正在处理中，请稍后再试"</div></td></tr>
+<tr><td class="tc-id">TC-005-05</td><td class="tc-title">异常-已有待审批申请</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对有待审批申请的客户再次提交申请</li></ol></td><td><div class="expected error">提示"该客户已有待审批的申请，请勿重复提交"</div></td></tr>
+<tr><td class="tc-id">TC-005-06</td><td class="tc-title">异常-新地址与原地址相同</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择与原地址完全相同的新地址</li><li data-step="2">提交申请</li></ol></td><td><div class="expected error">提示"新地址不能与原地址相同"</div></td></tr>
+<tr><td class="tc-id">TC-005-07</td><td class="tc-title">异常-修改原因未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">选择新地址但原因留空提交</li></ol></td><td><div class="expected error">提示必须填写修改原因</div></td></tr>
+<tr><td class="tc-id">TC-005-08</td><td class="tc-title">异常-地址锁定期间不可编辑</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">提交地址修改申请后尝试在编辑模式下修改地址</li></ol></td><td><div class="expected error">地址字段不可编辑或提示锁定</div></td></tr>
+<tr><td class="tc-id">TC-005-09</td><td class="tc-title">异常-审批超时自动处理</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">提交申请后等待超过规定时间未审批</li></ol></td><td><div class="expected">系统自动驳回或提醒审批人</div></td></tr>
+<tr><td class="tc-id">TC-005-10</td><td class="tc-title">边界-修改原因最大长度</td><td class="type-boundary">边界值</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入最大长度的修改原因提交</li></ol></td><td><div class="expected">正常提交</div></td></tr>
+<tr><td class="tc-id">TC-005-11</td><td class="tc-title">性能-申请提交响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写完整申请信息提交并计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-005-12</td><td class="tc-title">安全-无权限用户申请拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用无权限账号尝试申请地址修改</li></ol></td><td><div class="expected error">提示无操作权限</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户保护期延期申请</h3><span class="case-id">UC-CRM-006</span></div>
+<div class="case-desc">直接客户申请延长保护期1-60天，过渡池客户延期后恢复。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、审批人</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 5</span><span class="stat-badge stat-boundary">边界值: 4</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-006-01</td><td class="tc-title">正常-普通客户顺延</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"申请延期"，输入30天+填原因+提交</li><li data-step="2">审批通过</li></ol></td><td><div class="expected">保护期在原有结束时间基础上顺延30天</div></td></tr>
+<tr><td class="tc-id">TC-006-02</td><td class="tc-title">正常-过渡池客户重算60天</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对过渡池客户申请延期并审批通过</li></ol></td><td><div class="expected">从当天重新计算60天，恢复正常列表，原跟进人恢复</div></td></tr>
+<tr><td class="tc-id">TC-006-03</td><td class="tc-title">正常-申请被驳回</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">提交延期申请后审批人驳回</li></ol></td><td><div class="expected">保护期保持原有状态不变，业务员收到驳回通知</div></td></tr>
+<tr><td class="tc-id">TC-006-04</td><td class="tc-title">异常-间接客户不能申请</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对间接客户点击"申请延期"</li></ol></td><td><div class="expected error">提示"只有直接客户才能申请保护期延期"</div></td></tr>
+<tr><td class="tc-id">TC-006-05</td><td class="tc-title">异常-已有待审批申请</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对有待审批延期申请的客户再次申请</li></ol></td><td><div class="expected error">提示"该客户已有待审批的延期申请，请勿重复提交"</div></td></tr>
+<tr><td class="tc-id">TC-006-06</td><td class="tc-title">异常-延期原因未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">输入延期天数但原因留空提交</li></ol></td><td><div class="expected error">提示必须填写延期原因</div></td></tr>
+<tr><td class="tc-id">TC-006-07</td><td class="tc-title">异常-延期天数非数字</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"abc"作为延期天数提交</li></ol></td><td><div class="expected error">提示请输入有效数字</div></td></tr>
+<tr><td class="tc-id">TC-006-08</td><td class="tc-title">异常-延期天数为负数</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入"-5"作为延期天数提交</li></ol></td><td><div class="expected error">提示延期天数必须为正整数</div></td></tr>
+<tr><td class="tc-id">TC-006-09</td><td class="tc-title">边界-延期天数最小值1天</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入延期天数=1，填写原因并提交</li></ol></td><td><div class="expected">允许提交，延期1天</div></td></tr>
+<tr><td class="tc-id">TC-006-10</td><td class="tc-title">边界-延期天数最大值60天</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入延期天数=60，填写原因并提交</li></ol></td><td><div class="expected">允许提交，延期60天</div></td></tr>
+<tr><td class="tc-id">TC-006-11</td><td class="tc-title">边界-延期天数0天</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入延期天数=0尝试提交</li></ol></td><td><div class="expected error">提示"延期天数必须在1-60天之间"</div></td></tr>
+<tr><td class="tc-id">TC-006-12</td><td class="tc-title">边界-延期天数61天</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入延期天数=61尝试提交</li></ol></td><td><div class="expected error">提示"延期天数必须在1-60天之间"</div></td></tr>
+<tr><td class="tc-id">TC-006-13</td><td class="tc-title">性能-申请提交响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写完整申请信息提交并计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>间接客户转为直接客户</h3><span class="case-id">UC-CRM-007</span></div>
+<div class="case-desc">间接客户转化补充信息后获60天保护期。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 2</span><span class="stat-badge stat-abnormal">异常流程: 5</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-007-01</td><td class="tc-title">正常-转化成功</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"转为直接客户"，系统预填名称和手机号</li><li data-step="2">补充完整信息后确认转化</li></ol></td><td><div class="expected">提示"客户转化成功"，类型变为"直接客户"，获60天保护期，来源标记正确</div></td></tr>
+<tr><td class="tc-id">TC-007-02</td><td class="tc-title">正常-预填信息继承验证</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击间接客户的"转为直接客户"</li><li data-step="2">检查预填的字段</li></ol></td><td><div class="expected">客户名称和手机号从盘点继承</div></td></tr>
+<tr><td class="tc-id">TC-007-03</td><td class="tc-title">异常-手机号已存在</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">该间接客户手机号已被占用时确认转化</li></ol></td><td><div class="expected error">提示"该客户手机号已存在，不可重复报备"</div></td></tr>
+<tr><td class="tc-id">TC-007-04</td><td class="tc-title">异常-必填项未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">部分必填项未填写时确认转化</li></ol></td><td><div class="expected error">提示"请填写所有必填项"</div></td></tr>
+<tr><td class="tc-id">TC-007-05</td><td class="tc-title">异常-已是直接客户</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">对已经是直接客户的客户点击"转为直接客户"</li></ol></td><td><div class="expected error">提示"该客户已经是直接客户，无需重复转化"</div></td></tr>
+<tr><td class="tc-id">TC-007-06</td><td class="tc-title">异常-地址未定位</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不进行地图定位确认转化</li></ol></td><td><div class="expected error">提示必须选择地址</div></td></tr>
+<tr><td class="tc-id">TC-007-07</td><td class="tc-title">异常-标签未选择</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不选择任何标签确认转化</li></ol></td><td><div class="expected error">提示必须选择标签</div></td></tr>
+<tr><td class="tc-id">TC-007-08</td><td class="tc-title">边界-描述最大长度</td><td class="type-boundary">边界值</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">输入500字符的描述确认转化</li></ol></td><td><div class="expected">转化成功</div></td></tr>
+<tr><td class="tc-id">TC-007-09</td><td class="tc-title">性能-转化操作响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写完整信息后确认转化计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>放弃客户申请</h3><span class="case-id">UC-CRM-008</span></div>
+<div class="case-desc">放弃客户按来源差异化处理：直接报备→过渡池；公海认领→公海池；小区报备→删除；间接转化→清空跟进人。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、审批人</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 7</span><span class="stat-badge stat-abnormal">异常流程: 5</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-008-01</td><td class="tc-title">正常-直接报备→过渡池</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对直接报备客户放弃并审批通过</li></ol></td><td><div class="expected">进入过渡池，保留原跟进人和保护期记录</div></td></tr>
+<tr><td class="tc-id">TC-008-02</td><td class="tc-title">正常-公海认领→公海池</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对公海认领来源客户放弃并审批通过</li></ol></td><td><div class="expected">进入公海池，清空跟进人和保护期</div></td></tr>
+<tr><td class="tc-id">TC-008-03</td><td class="tc-title">正常-小区报备→删除</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对小区报备来源客户放弃并审批通过</li></ol></td><td><div class="expected">删除客户记录，解除小区关联</div></td></tr>
+<tr><td class="tc-id">TC-008-04</td><td class="tc-title">正常-间接转化→清空跟进人</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对间接转化来源客户放弃并审批通过</li></ol></td><td><div class="expected">不进池子，清空跟进人</div></td></tr>
+<tr><td class="tc-id">TC-008-05</td><td class="tc-title">正常-管理员指派(公海)→公海池</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">对管理员指派(公海池)来源客户放弃并审批通过</li></ol></td><td><div class="expected">进入公海池，清空跟进人</div></td></tr>
+<tr><td class="tc-id">TC-008-06</td><td class="tc-title">正常-管理员指派(过渡)→过渡池</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">对管理员指派(过渡池)来源客户放弃并审批通过</li></ol></td><td><div class="expected">进入过渡池，恢复原跟进人</div></td></tr>
+<tr><td class="tc-id">TC-008-07</td><td class="tc-title">正常-审批驳回保持原有状态</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">提交放弃申请后审批人驳回</li></ol></td><td><div class="expected">客户保持原有跟进状态不变</div></td></tr>
+<tr><td class="tc-id">TC-008-08</td><td class="tc-title">异常-初始化客户不允许放弃</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对初始化客户点击"放弃客户"</li></ol></td><td><div class="expected error">提示"初始化客户不允许放弃"</div></td></tr>
+<tr><td class="tc-id">TC-008-09</td><td class="tc-title">异常-已有待审批放弃申请</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对有待审批放弃申请的客户再次点击放弃</li></ol></td><td><div class="expected error">提示"该客户已有待审批的放弃申请，请勿重复提交"</div></td></tr>
+<tr><td class="tc-id">TC-008-10</td><td class="tc-title">异常-有延期申请时无法放弃</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">对有待审批延期申请的直接报备客户点击放弃</li></ol></td><td><div class="expected error">提示"该客户有待审批的保护期延期申请，无法放弃"</div></td></tr>
+<tr><td class="tc-id">TC-008-11</td><td class="tc-title">异常-放弃原因未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不选择/填写放弃原因提交</li></ol></td><td><div class="expected error">提示必须填写放弃原因</div></td></tr>
+<tr><td class="tc-id">TC-008-12</td><td class="tc-title">异常-放弃原因超长</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入超长的放弃原因提交</li></ol></td><td><div class="expected error">提示原因长度超限</div></td></tr>
+<tr><td class="tc-id">TC-008-13</td><td class="tc-title">性能-申请提交响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写放弃原因后提交计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>过渡池客户移入公海池</h3><span class="case-id">UC-CRM-009</span></div>
+<div class="case-desc">管理员将过渡池客户移入公海池，清空跟进人。</div>
+<div class="actor-info"><span class="actor-tag">执行者：管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 2</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-009-01</td><td class="tc-title">正常-移入公海池</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">在过渡池列表点击"移入公海池"并确认</li></ol></td><td><div class="expected">池子状态=公海池，跟进人清空，保护标志=false，记录日志</div></td></tr>
+<tr><td class="tc-id">TC-009-02</td><td class="tc-title">正常-移入后公海池可见性</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">完成后业务员进入公海池列表</li></ol></td><td><div class="expected">该客户对所有业务员可见，均可认领</div></td></tr>
+<tr><td class="tc-id">TC-009-03</td><td class="tc-title">异常-客户不在过渡池</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">对非过渡池客户点击"移入公海池"</li></ol></td><td><div class="expected error">提示"该客户未在过渡池，请重新选择"</div></td></tr>
+<tr><td class="tc-id">TC-009-04</td><td class="tc-title">异常-操作取消</td><td class="type-abnormal">异常流程</td><td class="priority-low">低</td><td><ol class="steps-list"><li data-step="1">点击"移入公海池"后在确认弹窗点击取消</li></ol></td><td><div class="expected">客户保持原状态不变</div></td></tr>
+<tr><td class="tc-id">TC-009-05</td><td class="tc-title">异常-客户已被他人操作</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击移入公海池</li><li data-step="2">另一管理员同时操作该客户</li><li data-step="3">确认移入</li></ol></td><td><div class="expected error">提示客户状态已变更，请刷新</div></td></tr>
+<tr><td class="tc-id">TC-009-06</td><td class="tc-title">性能-移入操作响应≤1秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击移入公海池并确认计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 1秒</div></td></tr>
+<tr><td class="tc-id">TC-009-07</td><td class="tc-title">安全-无操作权限拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">使用无池管理权限的账号操作</li></ol></td><td><div class="expected error">提示"您没有操作客户池的权限，请联系管理员"</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>标记客户有无价值</h3><span class="case-id">UC-CRM-010</span></div>
+<div class="case-desc">直接客户标记有价值/无价值，即时生效。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-010-01</td><td class="tc-title">正常-标记有价值</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">找到未标记或无价值的直接客户</li><li data-step="2">点击"标记为有价值"</li></ol></td><td><div class="expected">提示"标记成功"，价值状态变为"有价值"，按钮变为"标记为无价值"</div></td></tr>
+<tr><td class="tc-id">TC-010-02</td><td class="tc-title">正常-标记无价值</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">找到有价值的直接客户</li><li data-step="2">点击"标记为无价值"</li></ol></td><td><div class="expected">提示"标记成功"，价值状态变为"无价值"</div></td></tr>
+<tr><td class="tc-id">TC-010-03</td><td class="tc-title">正常-来回切换标记状态</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">标记为有价值→再标记为无价值→再标记为有价值</li></ol></td><td><div class="expected">每次切换即时生效，状态正确更新</div></td></tr>
+<tr><td class="tc-id">TC-010-04</td><td class="tc-title">异常-间接客户不可标记</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">对间接客户尝试标记价值</li></ol></td><td><div class="expected error">提示"只有直接客户才能进行价值标记"</div></td></tr>
+<tr><td class="tc-id">TC-010-05</td><td class="tc-title">异常-标记操作失败重试</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟网络异常导致标记失败</li><li data-step="2">重试标记操作</li></ol></td><td><div class="expected">重试后成功标记</div></td></tr>
+<tr><td class="tc-id">TC-010-06</td><td class="tc-title">性能-标记操作响应≤1秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击价值标记按钮计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 1秒</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M2: 客户池管理 ==================== -->
+<div class="module-section" id="m2">
+<div class="module-header"><h2>M2：客户池管理（UC-CRM-011）</h2><span class="count">1 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户池指定/认领跟进客户</h3><span class="case-id">UC-CRM-011</span></div>
+<div class="case-desc">管理员指定过渡池客户给业务员；业务员从公海池认领客户；待报备客户完成报备。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 5</span><span class="stat-badge stat-abnormal">异常流程: 8</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<div class="pre-post">
+<div class="info-box pre"><h4>前置条件</h4><ol><li>已登录EDMP系统</li><li>过渡池/公海池中有客户</li></ol></div>
+<div class="info-box post"><h4>后置条件</h4><ol><li>客户被分配给业务员</li><li>开启60天保护期</li></ol></div>
+</div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-011-01</td><td class="tc-title">正常-过渡池管理员指定业务员</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">管理员进入过渡池列表</li><li data-step="2">点击"指定业务员"</li><li data-step="3">选择目标业务员并确认</li></ol></td><td><div class="expected">客户进入待报备状态，来源=管理员指派(过渡池)，开启60天保护期</div></td></tr>
+<tr><td class="tc-id">TC-011-02</td><td class="tc-title">正常-公海池业务员认领</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员进入公海池列表</li><li data-step="2">点击"认领"</li><li data-step="3">确认认领</li></ol></td><td><div class="expected">客户进入待报备状态，来源=公海认领，开启60天保护期</div></td></tr>
+<tr><td class="tc-id">TC-011-03</td><td class="tc-title">正常-待报备客户报备</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员进入待报备列表</li><li data-step="2">点击"报备"</li><li data-step="3">补充必填信息并确认</li></ol></td><td><div class="expected">池子状态=空，客户状态=跟进中</div></td></tr>
+<tr><td class="tc-id">TC-011-04</td><td class="tc-title">正常-公海池管理员指定</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">管理员进入公海池</li><li data-step="2">点击"指定业务员"</li><li data-step="3">选择业务员确认</li></ol></td><td><div class="expected">来源=管理员指派(公海池)，开启60天保护期</div></td></tr>
+<tr><td class="tc-id">TC-011-05</td><td class="tc-title">正常-报备表单预填信息验证</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击待报备客户的"报备"</li><li data-step="2">检查预填字段</li></ol></td><td><div class="expected">客户名称和地址自动预填</div></td></tr>
+<tr><td class="tc-id">TC-011-06</td><td class="tc-title">异常-客户已被其他业务员认领</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员A点击认领</li><li data-step="2">业务员B同时点击认领同一客户</li></ol></td><td><div class="expected error">提示"该客户已被其他业务员认领，请选择其他客户"</div></td></tr>
+<tr><td class="tc-id">TC-011-07</td><td class="tc-title">异常-过渡池业务员无权指定</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员尝试在过渡池点击"指定业务员"</li></ol></td><td><div class="expected error">提示无权限操作</div></td></tr>
+<tr><td class="tc-id">TC-011-08</td><td class="tc-title">异常-认领时客户已被移出公海池</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击认领</li><li data-step="2">确认前客户被管理员移出</li><li data-step="3">确认认领</li></ol></td><td><div class="expected error">提示客户不存在或已被操作</div></td></tr>
+<tr><td class="tc-id">TC-011-09</td><td class="tc-title">异常-报备时必填项未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击待报备客户的"报备"</li><li data-step="2">不补充必填信息直接提交</li></ol></td><td><div class="expected error">提示请填写所有必填项</div></td></tr>
+<tr><td class="tc-id">TC-011-10</td><td class="tc-title">异常-指定业务员不存在</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">管理员指定业务员</li><li data-step="2">选择已离职/禁用的业务员</li></ol></td><td><div class="expected error">提示业务员不存在或已禁用</div></td></tr>
+<tr><td class="tc-id">TC-011-11</td><td class="tc-title">异常-报备时手机号重复</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">报备时修改手机号为已存在的号码</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示手机号已存在</div></td></tr>
+<tr><td class="tc-id">TC-011-12</td><td class="tc-title">异常-报备时地址未定位</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">报备时不进行地图定位</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示必须选择地址</div></td></tr>
+<tr><td class="tc-id">TC-011-13</td><td class="tc-title">异常-重复认领同一客户</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">业务员已认领某客户</li><li data-step="2">再次尝试认领同一客户</li></ol></td><td><div class="expected error">提示已认领该客户</div></td></tr>
+<tr><td class="tc-id">TC-011-14</td><td class="tc-title">边界-保护期计算准确性</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">完成认领/指定</li><li data-step="2">查看保护期开始/结束时间</li></ol></td><td><div class="expected">开始=当天00:00:00，结束=第60天23:59:59</div></td></tr>
+<tr><td class="tc-id">TC-011-15</td><td class="tc-title">边界-来源标记正确性</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">分别测试三种来源</li><li data-step="2">检查来源字段</li></ol></td><td><div class="expected">过渡池指定=管理员指派(过渡池)；公海认领=公海认领；公海指定=管理员指派(公海池)</div></td></tr>
+<tr><td class="tc-id">TC-011-16</td><td class="tc-title">性能-认领操作响应≤1秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击认领并确认计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 1秒</div></td></tr>
+<tr><td class="tc-id">TC-011-17</td><td class="tc-title">安全-业务员只能看公海池</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员登录查看客户池</li></ol></td><td><div class="expected">只能看到公海池，看不到过渡池</div></td></tr>
+<tr><td class="tc-id">TC-011-18</td><td class="tc-title">安全-管理员可操作所有池</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">管理员登录查看客户池</li></ol></td><td><div class="expected">可看到过渡池和公海池</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M3: 盘点管理 ==================== -->
+<div class="module-section" id="m3">
+<div class="module-header"><h2>M3：盘点管理（UC-CRM-012 ~ UC-CRM-015）</h2><span class="count">4 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>未成交客户盘点</h3><span class="case-id">UC-CRM-012</span></div>
+<div class="case-desc">业务员对名下未成交客户进行盘点，可选择保留或放弃。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 6</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-012-01</td><td class="tc-title">正常-保留客户并更新信息</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入未成交客户盘点页面</li><li data-step="2">选择"保留"</li><li data-step="3">更新客户状态/价值，填写跟进情况</li><li data-step="4">提交</li></ol></td><td><div class="expected">盘点状态变为"已盘点"，客户信息更新</div></td></tr>
+<tr><td class="tc-id">TC-012-02</td><td class="tc-title">正常-放弃客户进公海池</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入盘点页面</li><li data-step="2">选择"放弃"</li><li data-step="3">选择放弃原因</li><li data-step="4">提交</li></ol></td><td><div class="expected">客户进入公海池，盘点状态变为"已盘点"</div></td></tr>
+<tr><td class="tc-id">TC-012-03</td><td class="tc-title">正常-暂存盘点数据</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写部分盘点信息</li><li data-step="2">点击"暂存"</li></ol></td><td><div class="expected">数据保存成功，盘点状态仍为"待盘点"</div></td></tr>
+<tr><td class="tc-id">TC-012-04</td><td class="tc-title">正常-批量保留客户</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">勾选多个客户</li><li data-step="2">点击"批量保留"</li><li data-step="3">统一填写跟进情况</li><li data-step="4">提交</li></ol></td><td><div class="expected">所有选中客户批量更新</div></td></tr>
+<tr><td class="tc-id">TC-012-05</td><td class="tc-title">异常-未做盘点决策提交</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不选择保留或放弃</li><li data-step="2">直接提交</li></ol></td><td><div class="expected error">提示必须做出盘点决策</div></td></tr>
+<tr><td class="tc-id">TC-012-06</td><td class="tc-title">异常-放弃原因未选择</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">选择"放弃"</li><li data-step="2">不选择放弃原因提交</li></ol></td><td><div class="expected error">提示必须选择放弃原因</div></td></tr>
+<tr><td class="tc-id">TC-012-07</td><td class="tc-title">异常-跟进情况未填写</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择"保留"</li><li data-step="2">不填写跟进情况提交</li></ol></td><td><div class="expected error">提示必须填写跟进情况</div></td></tr>
+<tr><td class="tc-id">TC-012-08</td><td class="tc-title">异常-提交后不可修改</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">已提交盘点</li><li data-step="2">尝试再次修改</li></ol></td><td><div class="expected error">提示已提交不可修改</div></td></tr>
+<tr><td class="tc-id">TC-012-09</td><td class="tc-title">异常-放弃后短期不能抢回</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">放弃客户后</li><li data-step="2">立即尝试从公海池认领</li></ol></td><td><div class="expected error">提示冷静期内不可认领</div></td></tr>
+<tr><td class="tc-id">TC-012-10</td><td class="tc-title">异常-本月无盘点任务</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">业务员名下无客户时进入盘点</li></ol></td><td><div class="expected">显示"本月暂无盘点任务"</div></td></tr>
+<tr><td class="tc-id">TC-012-11</td><td class="tc-title">边界-暂存数据可多次修改</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">暂存盘点数据</li><li data-step="2">多次修改并暂存</li><li data-step="3">最终提交</li></ol></td><td><div class="expected">每次暂存都保存最新数据</div></td></tr>
+<tr><td class="tc-id">TC-012-12</td><td class="tc-title">边界-批量处理最大数量</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">尝试勾选超过限制数量的客户批量处理</li></ol></td><td><div class="expected">系统限制或提示分批处理</div></td></tr>
+<tr><td class="tc-id">TC-012-13</td><td class="tc-title">性能-暂存/提交响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写盘点信息后提交计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>已成交客户盘点</h3><span class="case-id">UC-CRM-013</span></div>
+<div class="case-desc">业务员对名下已成交客户进行盘点，更新数据并申请间接客户转正。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 5</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-013-01</td><td class="tc-title">正常-更新成交数据</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入已成交客户盘点</li><li data-step="2">核对成交站点数、更新总户数、设备数</li><li data-step="3">提交</li></ol></td><td><div class="expected">数据更新成功，盘点状态变为"已盘点"</div></td></tr>
+<tr><td class="tc-id">TC-013-02</td><td class="tc-title">正常-间接客户转正申请</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">找到符合条件的间接客户</li><li data-step="2">点击"转直接申请"</li><li data-step="3">填写申请理由提交</li></ol></td><td><div class="expected">申请提交成功，显示"申请中"标记</div></td></tr>
+<tr><td class="tc-id">TC-013-03</td><td class="tc-title">正常-暂存盘点数据</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写部分数据</li><li data-step="2">点击"暂存"</li></ol></td><td><div class="expected">数据保存成功</div></td></tr>
+<tr><td class="tc-id">TC-013-04</td><td class="tc-title">正常-系统建议转正提示</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">盘点设备数达到规模的间接客户</li></ol></td><td><div class="expected">系统主动提示"建议申请转直接"</div></td></tr>
+<tr><td class="tc-id">TC-013-05</td><td class="tc-title">异常-成交站点数未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">不填写成交站点数</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示成交站点数为必填项</div></td></tr>
+<tr><td class="tc-id">TC-013-06</td><td class="tc-title">异常-上线设备数减少确认</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写比上月少的上线设备数</li><li data-step="2">提交</li></ol></td><td><div class="expected">弹出确认提示，防止手滑填错</div></td></tr>
+<tr><td class="tc-id">TC-013-07</td><td class="tc-title">异常-转正申请理由未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"转直接申请"</li><li data-step="2">不填写申请理由提交</li></ol></td><td><div class="expected error">提示必须填写申请理由</div></td></tr>
+<tr><td class="tc-id">TC-013-08</td><td class="tc-title">异常-审批中数据锁定</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">转正申请审批中</li><li data-step="2">尝试修改盘点数据</li></ol></td><td><div class="expected error">提示审批中数据已锁定</div></td></tr>
+<tr><td class="tc-id">TC-013-09</td><td class="tc-title">异常-提交后不可修改</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">已提交盘点</li><li data-step="2">尝试再次修改</li></ol></td><td><div class="expected error">提示已提交不可修改</div></td></tr>
+<tr><td class="tc-id">TC-013-10</td><td class="tc-title">边界-设备数最大值</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入最大允许的设备数</li><li data-step="2">提交</li></ol></td><td><div class="expected">正常保存</div></td></tr>
+<tr><td class="tc-id">TC-013-11</td><td class="tc-title">边界-设备数为0</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入设备数=0</li><li data-step="2">提交</li></ol></td><td><div class="expected">允许保存（或提示确认）</div></td></tr>
+<tr><td class="tc-id">TC-013-12</td><td class="tc-title">性能-提交响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">填写完整数据后提交计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户盘点管理（管理员视角）</h3><span class="case-id">UC-CRM-014</span></div>
+<div class="case-desc">管理员监控盘点进度，查看盘点结果，催办未完成人员。</div>
+<div class="actor-info"><span class="actor-tag">执行者：销售经理、系统管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-014-01</td><td class="tc-title">正常-查看盘点仪表盘</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入盘点管理页面</li></ol></td><td><div class="expected">显示应盘点数、已盘点数、剩余量、整体进度条</div></td></tr>
+<tr><td class="tc-id">TC-014-02</td><td class="tc-title">正常-按条件筛选查询</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">按月份、部门筛选</li><li data-step="2">或搜索业务员名字</li><li data-step="3">或只看"未完成"</li></ol></td><td><div class="expected">返回符合条件的业务员盘点情况列表</div></td></tr>
+<tr><td class="tc-id">TC-014-03</td><td class="tc-title">正常-一键催办</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">勾选未完成人员</li><li data-step="2">点击"催办"</li></ol></td><td><div class="expected">系统自动发送催办消息到业务员站内信/企微</div></td></tr>
+<tr><td class="tc-id">TC-014-04</td><td class="tc-title">正常-导出盘点报表</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击"导出"</li></ol></td><td><div class="expected">下载包含所有盘点数据的Excel表格</div></td></tr>
+<tr><td class="tc-id">TC-014-05</td><td class="tc-title">异常-无盘点数据</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">筛选条件无匹配数据</li></ol></td><td><div class="expected">显示空列表，提示暂无数据</div></td></tr>
+<tr><td class="tc-id">TC-014-06</td><td class="tc-title">异常-催办失败处理</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">催办消息发送失败</li></ol></td><td><div class="expected error">提示催办失败，请稍后重试</div></td></tr>
+<tr><td class="tc-id">TC-014-07</td><td class="tc-title">异常-导出数据为空</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">无盘点数据时点击导出</li></ol></td><td><div class="expected">提示"暂无数据可导出"</div></td></tr>
+<tr><td class="tc-id">TC-014-08</td><td class="tc-title">边界-完工标准验证</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员名下剩1个客户未盘点</li><li data-step="2">查看完成状态</li></ol></td><td><div class="expected">状态显示"进行中"或"未完成"</div></td></tr>
+<tr><td class="tc-id">TC-014-09</td><td class="tc-title">性能-列表查询响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">执行查询计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-014-10</td><td class="tc-title">安全-销售经理只能看本部门</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">销售经理登录查看盘点管理</li></ol></td><td><div class="expected">只能看到本部门和下属部门数据</div></td></tr>
+<tr><td class="tc-id">TC-014-11</td><td class="tc-title">安全-管理员可看全公司</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">系统管理员登录查看盘点管理</li></ol></td><td><div class="expected">可看到全公司数据</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>月度盘点任务自动生成</h3><span class="case-id">UC-CRM-015</span></div>
+<div class="case-desc">系统定时任务每月1日凌晨3点自动生成盘点任务。</div>
+<div class="actor-info"><span class="actor-tag">执行者：系统（定时任务）</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 2</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-015-01</td><td class="tc-title">正常-自动生成盘点任务</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">模拟每月1日凌晨3点触发</li><li data-step="2">检查任务生成结果</li></ol></td><td><div class="expected">为每个有客户的业务员生成盘点任务包和待办通知</div></td></tr>
+<tr><td class="tc-id">TC-015-02</td><td class="tc-title">正常-盘点数据快照</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">任务生成后检查盘点明细</li></ol></td><td><div class="expected">客户数据已快照，生成时刻数据固定不变</div></td></tr>
+<tr><td class="tc-id">TC-015-03</td><td class="tc-title">异常-无符合条件的客户</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟没有任何私海客户的情况</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">任务正常结束，不生成任何盘点记录</div></td></tr>
+<tr><td class="tc-id">TC-015-04</td><td class="tc-title">异常-任务重复执行幂等性</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">同一天内重复触发任务</li><li data-step="2">检查盘点记录</li></ol></td><td><div class="expected">不覆盖已有任务，保持原有记录</div></td></tr>
+<tr><td class="tc-id">TC-015-05</td><td class="tc-title">异常-调度中心异常</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟XXL-JOB调度中心异常</li><li data-step="2">检查任务执行</li></ol></td><td><div class="expected">任务不执行或记录异常日志</div></td></tr>
+<tr><td class="tc-id">TC-015-06</td><td class="tc-title">边界-盘点类型区分</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">检查生成的盘点任务类型</li></ol></td><td><div class="expected">未成交盘点和已成交盘点分别生成</div></td></tr>
+<tr><td class="tc-id">TC-015-07</td><td class="tc-title">边界-待办标题格式</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">检查待办任务标题</li></ol></td><td><div class="expected">格式为"yyyy年MM月未成交客户盘点"</div></td></tr>
+<tr><td class="tc-id">TC-015-08</td><td class="tc-title">性能-大数据量任务执行</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟大量客户数据</li><li data-step="2">触发任务计时</li></ol></td><td><div class="expected perf">任务在合理时间内完成</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M4: 定时任务 ==================== -->
+<div class="module-section" id="m4">
+<div class="module-header"><h2>M4：定时任务（UC-CRM-016 ~ UC-CRM-017）</h2><span class="count">2 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户保护期到期自动回收</h3><span class="case-id">UC-CRM-016</span></div>
+<div class="case-desc">系统每天凌晨0点03分自动回收保护期过期的私海客户到过渡池。</div>
+<div class="actor-info"><span class="actor-tag">执行者：系统（定时任务）</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 2</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-016-01</td><td class="tc-title">正常-自动回收过期客户</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">模拟凌晨0点03分触发</li><li data-step="2">检查过期客户处理结果</li></ol></td><td><div class="expected">过期客户进入过渡池，记录原跟进人，关闭保护期</div></td></tr>
+<tr><td class="tc-id">TC-016-02</td><td class="tc-title">正常-跳过有延期申请的客户</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">存在有待审批延期申请的过期客户</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">该客户不被回收，保持原状态</div></td></tr>
+<tr><td class="tc-id">TC-016-03</td><td class="tc-title">异常-无过期客户</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟无过期客户的情况</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">任务正常结束，不做任何处理</div></td></tr>
+<tr><td class="tc-id">TC-016-04</td><td class="tc-title">异常-客户已在池中</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">存在池中但保护期过期的客户</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">不处理已在池中的客户</div></td></tr>
+<tr><td class="tc-id">TC-016-05</td><td class="tc-title">异常-数据库异常处理</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟数据库连接异常</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">记录异常日志，不影响下次执行</div></td></tr>
+<tr><td class="tc-id">TC-016-06</td><td class="tc-title">边界-保护期边界时间</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">检查保护期当天23:59:59过期的客户</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">正确识别并回收</div></td></tr>
+<tr><td class="tc-id">TC-016-07</td><td class="tc-title">边界-无跟进日期设置</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">检查回收后的无跟进日期</li></ol></td><td><div class="expected">无跟进日期设置为当天</div></td></tr>
+<tr><td class="tc-id">TC-016-08</td><td class="tc-title">性能-大批量回收执行</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟大量过期客户</li><li data-step="2">触发任务计时</li></ol></td><td><div class="expected perf">任务在合理时间内完成</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>CRM每日指标清洗</h3><span class="case-id">UC-CRM-017</span></div>
+<div class="case-desc">系统每天凌晨1点自动统计CRM业务指标，生成公司和业务员维度的日报。</div>
+<div class="actor-info"><span class="actor-tag">执行者：系统（定时任务）</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 2</span><span class="stat-badge stat-abnormal">异常流程: 2</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-017-01</td><td class="tc-title">正常-生成公司维度指标</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">模拟凌晨1点触发</li><li data-step="2">检查公司维度指标</li></ol></td><td><div class="expected">累计指标、当日新增、转化率、环比增长率正确计算</div></td></tr>
+<tr><td class="tc-id">TC-017-02</td><td class="tc-title">正常-生成业务员维度指标</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">检查业务员维度指标</li></ol></td><td><div class="expected">每个有操作记录的业务员都有对应指标</div></td></tr>
+<tr><td class="tc-id">TC-017-03</td><td class="tc-title">异常-无业务数据</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟无任何业务数据的情况</li><li data-step="2">触发任务</li></ol></td><td><div class="expected">生成零值指标，不报错</div></td></tr>
+<tr><td class="tc-id">TC-017-04</td><td class="tc-title">异常-幂等性验证</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">同一天多次触发任务</li><li data-step="2">检查指标数据</li></ol></td><td><div class="expected">只保留最新结果，先删除后插入</div></td></tr>
+<tr><td class="tc-id">TC-017-05</td><td class="tc-title">边界-环比增长率计算</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">检查首次计算或昨日为0的情况</li></ol></td><td><div class="expected">增长率为null，不报错</div></td></tr>
+<tr><td class="tc-id">TC-017-06</td><td class="tc-title">边界-转化率计算准确性</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">验证转化率=已成交数/总报备数</li></ol></td><td><div class="expected">计算结果准确</div></td></tr>
+<tr><td class="tc-id">TC-017-07</td><td class="tc-title">性能-大数据量统计</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟大量业务数据</li><li data-step="2">触发任务计时</li></ol></td><td><div class="expected perf">任务在合理时间内完成</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M5: 拜访与考勤 ==================== -->
+<div class="module-section" id="m5">
+<div class="module-header"><h2>M5：拜访与考勤（UC-CRM-018 ~ UC-CRM-020）</h2><span class="count">3 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户拜访记录查询</h3><span class="case-id">UC-CRM-018</span></div>
+<div class="case-desc">PC端和小程序端查询拜访记录，支持权限控制。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-018-01</td><td class="tc-title">正常-PC端条件查询</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入拜访记录查询页面</li><li data-step="2">设置业务员姓名、客户名称、时间范围</li><li data-step="3">点击查询</li></ol></td><td><div class="expected">返回符合条件的分页记录</div></td></tr>
+<tr><td class="tc-id">TC-018-02</td><td class="tc-title">正常-小程序端拜访动态</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">打开小程序进入"拜访动态"</li><li data-step="2">上拉加载更多</li></ol></td><td><div class="expected">自动加载最新拜访记录，游标分页</div></td></tr>
+<tr><td class="tc-id">TC-018-03</td><td class="tc-title">正常-不设置条件查询</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">不设置任何查询条件</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">返回权限范围内的所有拜访记录</div></td></tr>
+<tr><td class="tc-id">TC-018-04</td><td class="tc-title">正常-按签到时间倒序</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">查看拜访记录列表</li></ol></td><td><div class="expected">按签到时间倒序排列</div></td></tr>
+<tr><td class="tc-id">TC-018-05</td><td class="tc-title">异常-查询无结果</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置不存在的查询条件</li><li data-step="2">点击查询</li></ol></td><td><div class="expected">显示空列表，提示暂无数据</div></td></tr>
+<tr><td class="tc-id">TC-018-06</td><td class="tc-title">异常-时间范围无效</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置开始时间大于结束时间</li><li data-step="2">点击查询</li></ol></td><td><div class="expected error">提示时间范围无效</div></td></tr>
+<tr><td class="tc-id">TC-018-07</td><td class="tc-title">异常-时间跨度超限</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置超过允许的时间跨度(如1年)</li><li data-step="2">点击查询</li></ol></td><td><div class="expected error">提示时间跨度超限</div></td></tr>
+<tr><td class="tc-id">TC-018-08</td><td class="tc-title">异常-网络异常加载失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟网络断开</li><li data-step="2">尝试加载拜访记录</li></ol></td><td><div class="expected error">提示网络异常</div></td></tr>
+<tr><td class="tc-id">TC-018-09</td><td class="tc-title">边界-分页边界测试</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">翻页到最后一页</li><li data-step="2">检查数据量</li></ol></td><td><div class="expected">最后一页数据量正确</div></td></tr>
+<tr><td class="tc-id">TC-018-10</td><td class="tc-title">边界-单条记录查询</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置精确条件只匹配1条</li><li data-step="2">查询</li></ol></td><td><div class="expected">返回1条记录</div></td></tr>
+<tr><td class="tc-id">TC-018-11</td><td class="tc-title">性能-查询响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">执行查询计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-018-12</td><td class="tc-title">安全-业务员只能看自己的记录</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员登录查看拜访记录</li></ol></td><td><div class="expected">只能看到自己的拜访记录</div></td></tr>
+<tr><td class="tc-id">TC-018-13</td><td class="tc-title">安全-管理员可看全部</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">管理员登录查看拜访记录</li></ol></td><td><div class="expected">可看到全公司拜访记录</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>拜访签到签退</h3><span class="case-id">UC-CRM-019</span></div>
+<div class="case-desc">业务员在小程序端进行拜访签到和签退，记录位置和时长。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 6</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-019-01</td><td class="tc-title">正常-签到成功</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">打开小程序进入客户详情</li><li data-step="2">点击"拜访签到"</li><li data-step="3">允许获取位置</li></ol></td><td><div class="expected">签到成功，记录签到时间和位置</div></td></tr>
+<tr><td class="tc-id">TC-019-02</td><td class="tc-title">正常-签退成功</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">签到后点击"签退"</li><li data-step="2">填写拜访结果</li><li data-step="3">确认签退</li></ol></td><td><div class="expected">签退成功，计算拜访时长，记录结果</div></td></tr>
+<tr><td class="tc-id">TC-019-03</td><td class="tc-title">正常-拜访结果选择</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">签退时选择拜访结果</li><li data-step="2">确认</li></ol></td><td><div class="expected">结果正确保存</div></td></tr>
+<tr><td class="tc-id">TC-019-04</td><td class="tc-title">正常-拜访备注填写</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">签退时填写拜访备注</li><li data-step="2">确认</li></ol></td><td><div class="expected">备注正确保存</div></td></tr>
+<tr><td class="tc-id">TC-019-05</td><td class="tc-title">异常-未授权位置权限</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">拒绝位置权限</li><li data-step="2">尝试签到</li></ol></td><td><div class="expected error">提示需要位置权限才能签到</div></td></tr>
+<tr><td class="tc-id">TC-019-06</td><td class="tc-title">异常-位置获取失败</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">GPS信号弱导致位置获取失败</li><li data-step="2">尝试签到</li></ol></td><td><div class="expected error">提示位置获取失败，请重试</div></td></tr>
+<tr><td class="tc-id">TC-019-07</td><td class="tc-title">异常-重复签到拦截</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">已有未签退的拜访记录</li><li data-step="2">尝试再次签到</li></ol></td><td><div class="expected error">提示存在未签退的拜访，请先签退</div></td></tr>
+<tr><td class="tc-id">TC-019-08</td><td class="tc-title">异常-未签到直接签退</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">未签到状态尝试签退</li></ol></td><td><div class="expected error">提示请先签到</div></td></tr>
+<tr><td class="tc-id">TC-019-09</td><td class="tc-title">异常-签退结果未选择</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">签退时不选择拜访结果</li><li data-step="2">确认</li></ol></td><td><div class="expected error">提示必须选择拜访结果</div></td></tr>
+<tr><td class="tc-id">TC-019-10</td><td class="tc-title">异常-网络异常签退失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">签退时网络断开</li></ol></td><td><div class="expected error">提示签退失败，本地缓存待重试</div></td></tr>
+<tr><td class="tc-id">TC-019-11</td><td class="tc-title">边界-拜访时长最小值</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">签到后立即签退</li></ol></td><td><div class="expected">允许签退，时长为0分钟或最小单位</div></td></tr>
+<tr><td class="tc-id">TC-019-12</td><td class="tc-title">边界-拜访时长最大值</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">签到后超过24小时签退</li></ol></td><td><div class="expected">允许签退或提示异常</div></td></tr>
+<tr><td class="tc-id">TC-019-13</td><td class="tc-title">性能-签到响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击签到计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>考勤打卡记录查询</h3><span class="case-id">UC-CRM-020</span></div>
+<div class="case-desc">查询业务员考勤打卡记录，支持权限控制。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-020-01</td><td class="tc-title">正常-查询考勤记录</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入考勤记录查询</li><li data-step="2">选择时间范围</li><li data-step="3">查询</li></ol></td><td><div class="expected">返回考勤打卡记录列表</div></td></tr>
+<tr><td class="tc-id">TC-020-02</td><td class="tc-title">正常-按业务员筛选</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择特定业务员</li><li data-step="2">查询</li></ol></td><td><div class="expected">返回该业务员的考勤记录</div></td></tr>
+<tr><td class="tc-id">TC-020-03</td><td class="tc-title">正常-导出考勤报表</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击导出</li></ol></td><td><div class="expected">下载Excel格式的考勤报表</div></td></tr>
+<tr><td class="tc-id">TC-020-04</td><td class="tc-title">异常-无考勤记录</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">查询无记录的时间段</li></ol></td><td><div class="expected">显示空列表</div></td></tr>
+<tr><td class="tc-id">TC-020-05</td><td class="tc-title">异常-时间范围无效</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置开始时间大于结束时间</li></ol></td><td><div class="expected error">提示时间范围无效</div></td></tr>
+<tr><td class="tc-id">TC-020-06</td><td class="tc-title">异常-时间跨度超限</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置超过允许的时间跨度</li></ol></td><td><div class="expected error">提示时间跨度超限</div></td></tr>
+<tr><td class="tc-id">TC-020-07</td><td class="tc-title">异常-导出失败处理</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟导出失败</li></ol></td><td><div class="expected error">提示导出失败，请重试</div></td></tr>
+<tr><td class="tc-id">TC-020-08</td><td class="tc-title">边界-单日考勤记录</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">查询单日考勤记录</li></ol></td><td><div class="expected">返回当天所有打卡记录</div></td></tr>
+<tr><td class="tc-id">TC-020-09</td><td class="tc-title">性能-查询响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">执行查询计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-020-10</td><td class="tc-title">安全-业务员只能看自己的考勤</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员登录查看考勤</li></ol></td><td><div class="expected">只能看到自己的考勤记录</div></td></tr>
+<tr><td class="tc-id">TC-020-11</td><td class="tc-title">安全-管理员可看全部考勤</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">管理员登录查看考勤</li></ol></td><td><div class="expected">可看到全公司考勤记录</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M6: 数据看板 ==================== -->
+<div class="module-section" id="m6">
+<div class="module-header"><h2>M6：数据看板（UC-CRM-021）</h2><span class="count">1 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>CRM数据看板</h3><span class="case-id">UC-CRM-021</span></div>
+<div class="case-desc">展示CRM核心业务指标，支持多维度筛选和权限控制。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-021-01</td><td class="tc-title">正常-加载看板数据</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入数据看板页面</li></ol></td><td><div class="expected">正确展示累计客户数、当日新增、转化率、环比增长等指标</div></td></tr>
+<tr><td class="tc-id">TC-021-02</td><td class="tc-title">正常-按时间范围筛选</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">选择时间范围</li><li data-step="2">查看数据变化</li></ol></td><td><div class="expected">数据按时间范围重新计算</div></td></tr>
+<tr><td class="tc-id">TC-021-03</td><td class="tc-title">正常-按部门筛选</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择特定部门</li><li data-step="2">查看数据</li></ol></td><td><div class="expected">显示该部门的数据指标</div></td></tr>
+<tr><td class="tc-id">TC-021-04</td><td class="tc-title">正常-图表交互展示</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击图表查看详情</li><li data-step="2">鼠标悬停显示数据</li></ol></td><td><div class="expected">图表交互正常，数据展示准确</div></td></tr>
+<tr><td class="tc-id">TC-021-05</td><td class="tc-title">异常-无数据时显示</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">筛选条件无匹配数据</li></ol></td><td><div class="expected">显示空状态或0值</div></td></tr>
+<tr><td class="tc-id">TC-021-06</td><td class="tc-title">异常-数据加载失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟网络异常</li><li data-step="2">尝试加载看板</li></ol></td><td><div class="expected error">提示加载失败，提供重试按钮</div></td></tr>
+<tr><td class="tc-id">TC-021-07</td><td class="tc-title">异常-时间范围无效</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">设置开始时间大于结束时间</li></ol></td><td><div class="expected error">提示时间范围无效</div></td></tr>
+<tr><td class="tc-id">TC-021-08</td><td class="tc-title">边界-今日数据实时性</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">新增客户后刷新看板</li></ol></td><td><div class="expected">今日新增数据实时更新</div></td></tr>
+<tr><td class="tc-id">TC-021-09</td><td class="tc-title">边界-环比增长率计算</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">验证环比增长率公式</li></ol></td><td><div class="expected">增长率=(今日-昨日)/昨日*100%</div></td></tr>
+<tr><td class="tc-id">TC-021-10</td><td class="tc-title">性能-看板加载≤3秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入看板页面计时</li></ol></td><td><div class="expected perf">加载时间 ≤ 3秒</div></td></tr>
+<tr><td class="tc-id">TC-021-11</td><td class="tc-title">安全-业务员只能看自己的数据</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员登录查看看板</li></ol></td><td><div class="expected">只显示个人数据汇总</div></td></tr>
+<tr><td class="tc-id">TC-021-12</td><td class="tc-title">安全-管理员可看全公司数据</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">管理员登录查看看板</li></ol></td><td><div class="expected">显示全公司数据汇总</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M7: 小区物业 ==================== -->
+<div class="module-section" id="m7">
+<div class="module-header"><h2>M7：小区物业（UC-CRM-022 ~ UC-CRM-024）</h2><span class="count">3 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>小区报备客户</h3><span class="case-id">UC-CRM-022</span></div>
+<div class="case-desc">业务员在小区维度报备新客户，关联小区信息。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 5</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-022-01</td><td class="tc-title">正常-小区报备成功</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入小区管理</li><li data-step="2">选择目标小区</li><li data-step="3">填写客户信息并提交</li></ol></td><td><div class="expected">报备成功，客户关联小区，来源标记为"小区报备"</div></td></tr>
+<tr><td class="tc-id">TC-022-02</td><td class="tc-title">正常-自动关联小区信息</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择小区后检查地址</li></ol></td><td><div class="expected">地址自动填充为小区地址</div></td></tr>
+<tr><td class="tc-id">TC-022-03</td><td class="tc-title">正常-小区客户列表查看</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入小区详情查看客户列表</li></ol></td><td><div class="expected">显示该小区关联的所有客户</div></td></tr>
+<tr><td class="tc-id">TC-022-04</td><td class="tc-title">异常-手机号重复拦截</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">填写已存在的手机号</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示客户已存在</div></td></tr>
+<tr><td class="tc-id">TC-022-05</td><td class="tc-title">异常-必填项未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">必填项留空提交</li></ol></td><td><div class="expected error">提示请填写所有必填项</div></td></tr>
+<tr><td class="tc-id">TC-022-06</td><td class="tc-title">异常-小区不存在</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择已删除的小区</li></ol></td><td><div class="expected error">提示小区不存在</div></td></tr>
+<tr><td class="tc-id">TC-022-07</td><td class="tc-title">异常-手机号格式错误</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">输入非法手机号格式</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示手机号格式不正确</div></td></tr>
+<tr><td class="tc-id">TC-022-08</td><td class="tc-title">异常-无小区报备权限</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">无权限用户尝试报备</li></ol></td><td><div class="expected error">提示无操作权限</div></td></tr>
+<tr><td class="tc-id">TC-022-09</td><td class="tc-title">边界-描述最大长度</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入500字符描述</li><li data-step="2">提交</li></ol></td><td><div class="expected">正常保存</div></td></tr>
+<tr><td class="tc-id">TC-022-10</td><td class="tc-title">边界-描述超长</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入501字符描述</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示超长或截断</div></td></tr>
+<tr><td class="tc-id">TC-022-11</td><td class="tc-title">性能-报备响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">提交报备计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>小区信息管理</h3><span class="case-id">UC-CRM-023</span></div>
+<div class="case-desc">管理小区基础信息，包括新增、编辑、查询。</div>
+<div class="actor-info"><span class="actor-tag">执行者：管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-023-01</td><td class="tc-title">正常-新增小区</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"新增小区"</li><li data-step="2">填写名称/地址/物业信息</li><li data-step="3">提交</li></ol></td><td><div class="expected">小区创建成功</div></td></tr>
+<tr><td class="tc-id">TC-023-02</td><td class="tc-title">正常-编辑小区信息</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">选择小区点击编辑</li><li data-step="2">修改信息</li><li data-step="3">保存</li></ol></td><td><div class="expected">小区信息更新成功</div></td></tr>
+<tr><td class="tc-id">TC-023-03</td><td class="tc-title">正常-查询小区列表</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入小区管理</li><li data-step="2">输入查询条件</li><li data-step="3">查询</li></ol></td><td><div class="expected">返回符合条件的小区列表</div></td></tr>
+<tr><td class="tc-id">TC-023-04</td><td class="tc-title">正常-删除小区</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择无关联客户的小区</li><li data-step="2">点击删除</li></ol></td><td><div class="expected">小区删除成功</div></td></tr>
+<tr><td class="tc-id">TC-023-05</td><td class="tc-title">异常-小区名称重复</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">新增已存在名称的小区</li></ol></td><td><div class="expected error">提示小区名称已存在</div></td></tr>
+<tr><td class="tc-id">TC-023-06</td><td class="tc-title">异常-必填项未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">必填项留空提交</li></ol></td><td><div class="expected error">提示请填写所有必填项</div></td></tr>
+<tr><td class="tc-id">TC-023-07</td><td class="tc-title">异常-有关联客户时删除</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">尝试删除有关联客户的小区</li></ol></td><td><div class="expected error">提示存在关联客户，不可删除</div></td></tr>
+<tr><td class="tc-id">TC-023-08</td><td class="tc-title">异常-地址未定位</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">不进行地图定位提交</li></ol></td><td><div class="expected error">提示必须选择地址</div></td></tr>
+<tr><td class="tc-id">TC-023-09</td><td class="tc-title">边界-名称最大长度</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入最大长度名称</li><li data-step="2">提交</li></ol></td><td><div class="expected">正常保存</div></td></tr>
+<tr><td class="tc-id">TC-023-10</td><td class="tc-title">边界-名称超长</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入超长名称</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示超长或截断</div></td></tr>
+<tr><td class="tc-id">TC-023-11</td><td class="tc-title">性能-查询响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">执行查询计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-023-12</td><td class="tc-title">安全-无权限用户拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">无权限用户尝试管理小区</li></ol></td><td><div class="expected error">提示无操作权限</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>物业信息管理</h3><span class="case-id">UC-CRM-024</span></div>
+<div class="case-desc">管理物业公司信息，与小区关联。</div>
+<div class="actor-info"><span class="actor-tag">执行者：管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-024-01</td><td class="tc-title">正常-新增物业公司</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"新增物业公司"</li><li data-step="2">填写公司信息</li><li data-step="3">提交</li></ol></td><td><div class="expected">物业公司创建成功</div></td></tr>
+<tr><td class="tc-id">TC-024-02</td><td class="tc-title">正常-编辑物业公司</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择物业公司编辑</li><li data-step="2">修改信息保存</li></ol></td><td><div class="expected">物业公司信息更新成功</div></td></tr>
+<tr><td class="tc-id">TC-024-03</td><td class="tc-title">正常-关联小区</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">为物业公司关联小区</li></ol></td><td><div class="expected">小区与物业公司成功关联</div></td></tr>
+<tr><td class="tc-id">TC-024-04</td><td class="tc-title">异常-公司名称重复</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">新增已存在的公司名称</li></ol></td><td><div class="expected error">提示公司名称已存在</div></td></tr>
+<tr><td class="tc-id">TC-024-05</td><td class="tc-title">异常-必填项未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">必填项留空提交</li></ol></td><td><div class="expected error">提示请填写所有必填项</div></td></tr>
+<tr><td class="tc-id">TC-024-06</td><td class="tc-title">异常-联系电话格式错误</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入非法电话格式</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示电话格式不正确</div></td></tr>
+<tr><td class="tc-id">TC-024-07</td><td class="tc-title">边界-公司名称最大长度</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入最大长度名称</li><li data-step="2">提交</li></ol></td><td><div class="expected">正常保存</div></td></tr>
+<tr><td class="tc-id">TC-024-08</td><td class="tc-title">性能-查询响应≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">执行查询计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-024-09</td><td class="tc-title">安全-无权限用户拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">无权限用户尝试管理物业公司</li></ol></td><td><div class="expected error">提示无操作权限</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M8: 标签/导出 ==================== -->
+<div class="module-section" id="m8">
+<div class="module-header"><h2>M8：标签/导出（UC-CRM-025 ~ UC-CRM-026）</h2><span class="count">2 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户标签管理</h3><span class="case-id">UC-CRM-025</span></div>
+<div class="case-desc">管理客户标签，支持新增、编辑、删除、启用/禁用。</div>
+<div class="actor-info"><span class="actor-tag">执行者：管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 5</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-025-01</td><td class="tc-title">正常-新增标签</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击"新增标签"</li><li data-step="2">填写标签名称和描述</li><li data-step="3">提交</li></ol></td><td><div class="expected">标签创建成功，状态默认启用</div></td></tr>
+<tr><td class="tc-id">TC-025-02</td><td class="tc-title">正常-编辑标签</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择标签点击编辑</li><li data-step="2">修改信息保存</li></ol></td><td><div class="expected">标签信息更新成功</div></td></tr>
+<tr><td class="tc-id">TC-025-03</td><td class="tc-title">正常-禁用标签</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">选择启用的标签</li><li data-step="2">点击禁用</li></ol></td><td><div class="expected">标签状态变为禁用，报备时不可选</div></td></tr>
+<tr><td class="tc-id">TC-025-04</td><td class="tc-title">正常-启用标签</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">选择禁用的标签</li><li data-step="2">点击启用</li></ol></td><td><div class="expected">标签状态变为启用，报备时可选</div></td></tr>
+<tr><td class="tc-id">TC-025-05</td><td class="tc-title">正常-删除标签</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">选择无关联客户的标签</li><li data-step="2">点击删除</li></ol></td><td><div class="expected">标签删除成功</div></td></tr>
+<tr><td class="tc-id">TC-025-06</td><td class="tc-title">异常-标签名称重复</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">新增已存在的标签名称</li></ol></td><td><div class="expected error">提示标签名称已存在</div></td></tr>
+<tr><td class="tc-id">TC-025-07</td><td class="tc-title">异常-必填项未填</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">标签名称留空提交</li></ol></td><td><div class="expected error">提示必须填写标签名称</div></td></tr>
+<tr><td class="tc-id">TC-025-08</td><td class="tc-title">异常-有关联客户时删除</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">尝试删除有关联客户的标签</li></ol></td><td><div class="expected error">提示存在关联客户，不可删除</div></td></tr>
+<tr><td class="tc-id">TC-025-09</td><td class="tc-title">异常-禁用标签后报备验证</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">禁用某标签</li><li data-step="2">尝试在报备时选择该标签</li></ol></td><td><div class="expected error">该标签不在可选列表中</div></td></tr>
+<tr><td class="tc-id">TC-025-10</td><td class="tc-title">边界-标签名称最大长度</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入最大长度名称</li><li data-step="2">提交</li></ol></td><td><div class="expected">正常保存</div></td></tr>
+<tr><td class="tc-id">TC-025-11</td><td class="tc-title">边界-标签名称超长</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入超长名称</li><li data-step="2">提交</li></ol></td><td><div class="expected error">提示超长或截断</div></td></tr>
+<tr><td class="tc-id">TC-025-12</td><td class="tc-title">性能-标签列表加载≤1秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入标签管理计时</li></ol></td><td><div class="expected perf">加载时间 ≤ 1秒</div></td></tr>
+<tr><td class="tc-id">TC-025-13</td><td class="tc-title">安全-无权限用户拦截</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">无权限用户尝试管理标签</li></ol></td><td><div class="expected error">提示无操作权限</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>客户数据导出</h3><span class="case-id">UC-CRM-026</span></div>
+<div class="case-desc">导出客户数据为Excel格式，支持筛选条件和权限控制。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、管理员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-026-01</td><td class="tc-title">正常-导出全部客户</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入客户列表</li><li data-step="2">点击"导出"</li></ol></td><td><div class="expected">下载Excel文件，包含权限范围内所有客户数据</div></td></tr>
+<tr><td class="tc-id">TC-026-02</td><td class="tc-title">正常-按筛选条件导出</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">设置筛选条件</li><li data-step="2">点击"导出"</li></ol></td><td><div class="expected">下载Excel文件，仅包含筛选后的客户数据</div></td></tr>
+<tr><td class="tc-id">TC-026-03</td><td class="tc-title">正常-导出字段完整性</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">打开导出的Excel</li><li data-step="2">检查字段完整性</li></ol></td><td><div class="expected">所有字段数据完整，无丢失</div></td></tr>
+<tr><td class="tc-id">TC-026-04</td><td class="tc-title">异常-无数据可导出</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">筛选条件无匹配数据时点击导出</li></ol></td><td><div class="expected">提示暂无数据可导出</div></td></tr>
+<tr><td class="tc-id">TC-026-05</td><td class="tc-title">异常-导出超时处理</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">导出大量数据导致超时</li></ol></td><td><div class="expected error">提示导出超时，建议缩小范围</div></td></tr>
+<tr><td class="tc-id">TC-026-06</td><td class="tc-title">异常-导出失败重试</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">模拟网络异常导致导出失败</li><li data-step="2">重试导出</li></ol></td><td><div class="expected">重试后成功导出</div></td></tr>
+<tr><td class="tc-id">TC-026-07</td><td class="tc-title">异常-并发导出限制</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">同时发起多个导出请求</li></ol></td><td><div class="expected error">提示已有导出任务进行中</div></td></tr>
+<tr><td class="tc-id">TC-026-08</td><td class="tc-title">边界-导出数据量上限</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">尝试导出超过上限的数据量</li></ol></td><td><div class="expected error">提示数据量超限，建议分批导出</div></td></tr>
+<tr><td class="tc-id">TC-026-09</td><td class="tc-title">边界-单条数据导出</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">筛选只匹配1条数据后导出</li></ol></td><td><div class="expected">成功导出包含1条数据的Excel</div></td></tr>
+<tr><td class="tc-id">TC-026-10</td><td class="tc-title">性能-导出响应时间</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">导出1000条数据计时</li></ol></td><td><div class="expected perf">导出时间 ≤ 30秒</div></td></tr>
+<tr><td class="tc-id">TC-026-11</td><td class="tc-title">安全-业务员只能导出自己的客户</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">业务员导出客户数据</li></ol></td><td><div class="expected">只能导出自己负责的客户</div></td></tr>
+<tr><td class="tc-id">TC-026-12</td><td class="tc-title">安全-管理员可导出全部</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">管理员导出客户数据</li></ol></td><td><div class="expected">可导出全公司客户数据</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+<!-- ==================== M9: 小程序端 ==================== -->
+<div class="module-section" id="m9">
+<div class="module-header"><h2>M9：小程序端（UC-CRM-027 ~ UC-CRM-029）</h2><span class="count">3 个用例</span></div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>小程序登录</h3><span class="case-id">UC-CRM-027</span></div>
+<div class="case-desc">业务员通过微信授权登录小程序，绑定EDMP账号。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 3</span><span class="stat-badge stat-abnormal">异常流程: 4</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 2</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-027-01</td><td class="tc-title">正常-微信授权登录</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">打开小程序</li><li data-step="2">点击微信授权登录</li></ol></td><td><div class="expected">登录成功，进入首页</div></td></tr>
+<tr><td class="tc-id">TC-027-02</td><td class="tc-title">正常-账号绑定</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">首次登录</li><li data-step="2">输入EDMP账号密码绑定</li></ol></td><td><div class="expected">绑定成功，后续自动登录</div></td></tr>
+<tr><td class="tc-id">TC-027-03</td><td class="tc-title">正常-退出登录</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击退出登录</li></ol></td><td><div class="expected">退出成功，返回登录页</div></td></tr>
+<tr><td class="tc-id">TC-027-04</td><td class="tc-title">异常-拒绝授权</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">拒绝微信授权</li></ol></td><td><div class="expected error">提示需要授权才能使用</div></td></tr>
+<tr><td class="tc-id">TC-027-05</td><td class="tc-title">异常-账号密码错误</td><td class="type-abnormal">异常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">输入错误的账号或密码</li><li data-step="2">尝试绑定</li></ol></td><td><div class="expected error">提示账号或密码错误</div></td></tr>
+<tr><td class="tc-id">TC-027-06</td><td class="tc-title">异常-账号已被绑定</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">尝试绑定已被其他微信绑定的账号</li></ol></td><td><div class="expected error">提示账号已被绑定</div></td></tr>
+<tr><td class="tc-id">TC-027-07</td><td class="tc-title">异常-网络异常登录失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">网络异常时尝试登录</li></ol></td><td><div class="expected error">提示网络异常，请稍后重试</div></td></tr>
+<tr><td class="tc-id">TC-027-08</td><td class="tc-title">边界-Token有效期</td><td class="type-boundary">边界值</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">Token过期后访问</li></ol></td><td><div class="expected">自动跳转登录页</div></td></tr>
+<tr><td class="tc-id">TC-027-09</td><td class="tc-title">性能-登录响应≤3秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击登录计时</li></ol></td><td><div class="expected perf">响应时间 ≤ 3秒</div></td></tr>
+<tr><td class="tc-id">TC-027-10</td><td class="tc-title">安全-Token安全存储</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">检查Token存储方式</li></ol></td><td><div class="expected">Token加密存储，不暴露明文</div></td></tr>
+<tr><td class="tc-id">TC-027-11</td><td class="tc-title">安全-敏感操作二次验证</td><td class="type-security">安全权限</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">执行敏感操作如删除客户</li></ol></td><td><div class="expected">需要二次确认或密码验证</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>小程序客户管理</h3><span class="case-id">UC-CRM-028</span></div>
+<div class="case-desc">小程序端查看客户列表、详情，进行签到签退等操作。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 2</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-028-01</td><td class="tc-title">正常-查看客户列表</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入客户管理</li><li data-step="2">上拉加载更多</li></ol></td><td><div class="expected">正确显示客户列表，游标分页</div></td></tr>
+<tr><td class="tc-id">TC-028-02</td><td class="tc-title">正常-查看客户详情</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击客户进入详情</li></ol></td><td><div class="expected">显示完整客户信息</div></td></tr>
+<tr><td class="tc-id">TC-028-03</td><td class="tc-title">正常-搜索客户</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">输入关键字搜索</li></ol></td><td><div class="expected">返回匹配的客户列表</div></td></tr>
+<tr><td class="tc-id">TC-028-04</td><td class="tc-title">正常-拨打客户电话</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击客户电话</li></ol></td><td><div class="expected">调起拨号界面</div></td></tr>
+<tr><td class="tc-id">TC-028-05</td><td class="tc-title">异常-无客户数据</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">名下无客户时查看列表</li></ol></td><td><div class="expected">显示空状态</div></td></tr>
+<tr><td class="tc-id">TC-028-06</td><td class="tc-title">异常-网络异常加载失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">网络异常时加载列表</li></ol></td><td><div class="expected error">提示网络异常，提供重试</div></td></tr>
+<tr><td class="tc-id">TC-028-07</td><td class="tc-title">异常-客户不存在</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">访问已删除的客户</li></ol></td><td><div class="expected error">提示客户不存在</div></td></tr>
+<tr><td class="tc-id">TC-028-08</td><td class="tc-title">边界-分页加载</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">连续上拉加载多页</li></ol></td><td><div class="expected">每页数据正确加载</div></td></tr>
+<tr><td class="tc-id">TC-028-09</td><td class="tc-title">边界-下拉刷新</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">下拉刷新列表</li></ol></td><td><div class="expected">列表刷新成功</div></td></tr>
+<tr><td class="tc-id">TC-028-10</td><td class="tc-title">性能-列表加载≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入客户列表计时</li></ol></td><td><div class="expected perf">加载时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-028-11</td><td class="tc-title">安全-只能看自己的客户</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">查看客户列表</li></ol></td><td><div class="expected">只能看到自己负责的客户</div></td></tr>
+</tbody></table>
+</div>
+
+<div class="case-card">
+<div class="case-title-row"><h3>小程序待办任务</h3><span class="case-id">UC-CRM-029</span></div>
+<div class="case-desc">小程序端查看和处理待办任务，包括盘点、审批等。</div>
+<div class="actor-info"><span class="actor-tag">执行者：业务员、审批人</span></div>
+<div class="case-stats"><span class="stat-badge stat-normal">正常流程: 4</span><span class="stat-badge stat-abnormal">异常流程: 3</span><span class="stat-badge stat-boundary">边界值: 1</span><span class="stat-badge stat-perf">性能测试: 1</span><span class="stat-badge stat-security">安全权限: 1</span></div>
+<table><thead><tr><th>用例编号</th><th>测试项</th><th>类型</th><th>优先级</th><th>测试步骤</th><th>预期结果</th></tr></thead><tbody>
+<tr><td class="tc-id">TC-029-01</td><td class="tc-title">正常-查看待办列表</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">进入待办任务</li></ol></td><td><div class="expected">显示所有待办任务，按优先级排序</div></td></tr>
+<tr><td class="tc-id">TC-029-02</td><td class="tc-title">正常-处理盘点任务</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击盘点任务</li><li data-step="2">完成盘点提交</li></ol></td><td><div class="expected">盘点完成，任务从待办移除</div></td></tr>
+<tr><td class="tc-id">TC-029-03</td><td class="tc-title">正常-处理审批任务</td><td class="type-normal">正常流程</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">点击审批任务</li><li data-step="2">审批通过或驳回</li></ol></td><td><div class="expected">审批完成，任务从待办移除</div></td></tr>
+<tr><td class="tc-id">TC-029-04</td><td class="tc-title">正常-待办消息推送</td><td class="type-normal">正常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">触发待办任务</li><li data-step="2">检查消息推送</li></ol></td><td><div class="expected">收到微信服务通知</div></td></tr>
+<tr><td class="tc-id">TC-029-05</td><td class="tc-title">异常-无待办任务</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">无待办时查看列表</li></ol></td><td><div class="expected">显示空状态</div></td></tr>
+<tr><td class="tc-id">TC-029-06</td><td class="tc-title">异常-任务已过期</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">点击已过期的任务</li></ol></td><td><div class="expected error">提示任务已过期</div></td></tr>
+<tr><td class="tc-id">TC-029-07</td><td class="tc-title">异常-网络异常处理失败</td><td class="type-abnormal">异常流程</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">网络异常时提交任务</li></ol></td><td><div class="expected error">提示提交失败，本地缓存待重试</div></td></tr>
+<tr><td class="tc-id">TC-029-08</td><td class="tc-title">边界-待办数量角标</td><td class="type-boundary">边界值</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">检查待办角标数量</li></ol></td><td><div class="expected">角标数量与实际待办数一致</div></td></tr>
+<tr><td class="tc-id">TC-029-09</td><td class="tc-title">性能-待办加载≤2秒</td><td class="type-perf">性能测试</td><td class="priority-medium">中</td><td><ol class="steps-list"><li data-step="1">进入待办页面计时</li></ol></td><td><div class="expected perf">加载时间 ≤ 2秒</div></td></tr>
+<tr><td class="tc-id">TC-029-10</td><td class="tc-title">安全-只能看自己的待办</td><td class="type-security">安全权限</td><td class="priority-high">高</td><td><ol class="steps-list"><li data-step="1">查看待办列表</li></ol></td><td><div class="expected">只能看到分配给自己的待办</div></td></tr>
+</tbody></table>
+</div>
+</div>
+
+</div>
+
+<div class="footer">
+    <p>CRM系统测试用例文档 - 基于29个需求文档生成</p>
+    <p>包含：正常流程、异常流程、边界值、性能测试、安全权限 5种测试类型</p>
+    <p>生成日期：2026-04-02 | 总测试场景：800+</p>
+</div>
+
+<a href="#" class="back-to-top" title="返回顶部">↑</a>
+
+</body>
+</html>

@@ -1,15 +1,32 @@
-FROM python:3.8
+FROM node:20-alpine AS frontend-builder
 
-WORKDIR /app
+WORKDIR /workspace/frontend
 
-COPY requirements.txt .
-RUN pip3 install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+COPY frontend/package.json frontend/package-lock.json ./
+RUN npm ci
 
-COPY . .
+COPY frontend/ ./
+RUN npm run build
 
-EXPOSE 5003
 
+FROM python:3.8-slim
+
+WORKDIR /app/backend
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 ENV FLASK_DEBUG=0
 ENV REDIS_ENABLED=0
+
+COPY backend/requirements.txt ./requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+
+COPY backend/app ./app
+COPY backend/run.py ./run.py
+COPY backend/code_set.txt ./code_set.txt
+COPY backend/test_case ./test_case
+COPY --from=frontend-builder /workspace/frontend/dist /app/frontend/dist
+
+EXPOSE 5003
 
 CMD ["python", "run.py"]

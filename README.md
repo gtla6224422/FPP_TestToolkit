@@ -1,52 +1,98 @@
 # web_demo
 
-一个基于 Flask 的接口演示项目，包含登录注册、用户查询、订单创建、JSON 数据提取工具和 Prometheus 监控接口。
+一个用于内部测试与运维辅助的小工具站，采用单仓库管理：
 
-## 本地启动
+- 后端：Flask，目录为 `backend/`
+- 前端：Vue + Vite，目录为 `frontend/`
+- 部署：单容器，对外只暴露 `5003`
 
-1. 安装依赖
+当前方案保留了前后端代码边界，但在部署阶段统一打包，适合小型工具站快速维护与发布。
+
+## 目录结构
+
+```text
+.
+├─ backend/             Flask 后端
+│  ├─ app/
+│  ├─ test_case/
+│  ├─ requirements.txt
+│  └─ run.py
+├─ frontend/            Vue 前端
+├─ Dockerfile           单容器构建文件
+├─ README.md
+└─ .gitignore
+```
+
+## 本地开发
+
+### 后端
 
 ```powershell
+cd backend
 python -m pip install -r requirements.txt
-```
-
-2. 使用默认本地配置启动
-
-```powershell
 python run.py
 ```
 
-默认会监听 `http://127.0.0.1:5003`，并使用本地 SQLite 数据库 `instance/app.db`。
+默认监听 `http://127.0.0.1:5003`
 
-## 可选环境变量
-
-```powershell
-$env:SECRET_KEY="dev-secret"
-$env:FLASK_DEBUG="1"
-$env:DATABASE_URL="sqlite:///instance/app.db"
-$env:REDIS_ENABLED="0"
-python run.py
-```
-
-如果要接入外部 MySQL / Redis，可以设置：
+### 前端
 
 ```powershell
-$env:DATABASE_URL="mysql+pymysql://user:password@127.0.0.1:3306/web_demo"
-$env:REDIS_ENABLED="1"
-$env:REDIS_HOST="127.0.0.1"
-$env:REDIS_PORT="6379"
-$env:REDIS_PASSWORD=""
-python run.py
+cd frontend
+npm install
+npm run dev
 ```
+
+开发模式下，Vite 会通过代理转发到后端接口。
+
+## 单容器构建
+
+```powershell
+docker build -t webdemo-toolbox .
+docker run -p 5003:5003 webdemo-toolbox
+```
+
+启动后直接访问：
+
+```text
+http://127.0.0.1:5003
+```
+
+前端静态资源由 Flask 统一托管，接口也走同一域名与端口。
 
 ## 主要接口
 
-- `GET /get_user`
-- `POST /UserInfo`
-- `POST /Create_order`
+- `GET /Get_equipment`
+- `GET /sql-kit`
+- `GET /sql-kit/tools`
+- `GET /sql-kit/template`
+- `POST /sql-kit/template`
+- `POST /sql-kit/template/analyze`
+- `POST /sql-kit/run`
+- `GET /sql-kit/results`
+- `GET /sql-kit/result-preview`
+- `GET /sql-kit/download`
+- `GET /testcases`
+- `POST /testcases/upload`
+- `POST /testcases/delete`
+- `GET /testcases/download`
+- `GET /testcases/view`
 - `POST /Sum_json`
 - `POST /Get_field`
 - `POST /Get_exp_field`
 - `POST /Get_json`
+- `POST /Create_order`
+- `GET /get_user`
+- `POST /UserInfo`
 - `GET /metrics`
 - `GET /metrics/raw`
+
+## 后续如果要拆回双容器
+
+当前结构已经保留了可拆分边界，后续只需要：
+
+1. 让前端单独构建镜像
+2. 停止由 Flask 托管 `frontend/dist`
+3. 用 Nginx 或网关把页面流量转到前端、接口流量转到后端
+
+前后端源码目录无需重写，迁移成本较低。
