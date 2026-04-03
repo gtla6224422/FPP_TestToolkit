@@ -19,7 +19,7 @@ ENV FLASK_DEBUG=0
 ENV REDIS_ENABLED=0
 
 COPY backend/requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+RUN pip install --no-cache-dir -r requirements.txt -i https://repo.huaweicloud.com/repository/pypi/simple
 
 COPY backend/app ./app
 COPY backend/run.py ./run.py
