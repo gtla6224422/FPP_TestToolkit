@@ -109,6 +109,29 @@ docker rm -f fpp-test-toolkit
 docker rmi fpp-test-toolkit:local
 ```
 
+## 云服务器一键重部署
+
+项目根目录提供了 `deploy.sh`，适合在 Linux 云服务器上执行一键重部署。
+
+首次使用先赋予执行权限：
+
+```bash
+chmod +x deploy.sh
+```
+
+每次 `git pull` 完成后，直接执行：
+
+```bash
+./deploy.sh
+```
+
+脚本会自动完成以下动作：
+
+- 停掉当前项目容器并清理孤儿容器
+- 删除当前项目旧镜像 `fpp-test-toolkit:local`
+- 重新执行 `docker compose up --build -d`
+- 输出最新容器状态
+
 启动后直接访问：
 
 ```text
