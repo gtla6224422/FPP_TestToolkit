@@ -24,8 +24,12 @@ def build_log(logs: list[dict], level: str, message: str) -> None:
 
 
 def get_sql_kit_root() -> Path:
-    # Flask 项目与 Test_tools 在同级目录，这里固定映射到原工具目录。
-    return Path(current_app.root_path).parent.parent.parent / "Test_tools"
+    configured_root = current_app.config.get("SQL_KIT_ROOT")
+    if configured_root:
+        return Path(configured_root)
+
+    # 默认将 SQL Kit 数据保存到后端目录内，方便容器部署时挂载持久化卷。
+    return Path(current_app.root_path).parent / "sql_kit_data"
 
 
 def ensure_sql_kit_structure() -> None:

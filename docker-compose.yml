@@ -1,0 +1,39 @@
+services:
+  webdemo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: fpp-test-toolkit:local
+    container_name: fpp-test-toolkit
+    env_file:
+      - .env
+    ports:
+      - "5003:5003"
+    environment:
+      FLASK_RUN_HOST: ${FLASK_RUN_HOST:-0.0.0.0}
+      FLASK_RUN_PORT: ${FLASK_RUN_PORT:-5003}
+      FLASK_DEBUG: ${FLASK_DEBUG:-0}
+      REDIS_ENABLED: ${REDIS_ENABLED:-0}
+      SECRET_KEY: ${SECRET_KEY:-dev-secret-key}
+      DATABASE_URL: ${DATABASE_URL:-sqlite:////app/backend/instance/app.db}
+      SQL_KIT_ROOT: ${SQL_KIT_ROOT:-/app/backend/sql_kit_data}
+      FPP_PLATFORM_DB_HOST: ${FPP_PLATFORM_DB_HOST:-8.134.37.199}
+      FPP_PLATFORM_DB_PORT: ${FPP_PLATFORM_DB_PORT:-6033}
+      FPP_PLATFORM_DB_USER: ${FPP_PLATFORM_DB_USER:-root}
+      FPP_PLATFORM_DB_PASSWORD: ${FPP_PLATFORM_DB_PASSWORD:-Xzpp_Mysql_2024_test!}
+      FPP_PLATFORM_DB_NAME: ${FPP_PLATFORM_DB_NAME:-fpp_platform}
+    volumes:
+      - ./docker-data/backend-instance:/app/backend/instance
+      - ./docker-data/test_case:/app/backend/test_case
+      - ./docker-data/sql_kit:/app/backend/sql_kit_data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import sys, urllib.request; urllib.request.urlopen('http://127.0.0.1:5003/health', timeout=5).read(); sys.exit(0)"
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped

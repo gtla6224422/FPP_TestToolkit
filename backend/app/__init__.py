@@ -83,6 +83,13 @@ def create_app():
             },
         }, 200
 
+    @application.get("/health")
+    def health():
+        return {
+            "status": "ok",
+            "service": "webdemo",
+        }, 200
+
     @application.get("/assets/<path:filename>")
     def frontend_assets(filename: str):
         frontend_dist_dir = get_frontend_dist_dir(application)

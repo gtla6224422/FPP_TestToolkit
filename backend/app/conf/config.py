@@ -17,6 +17,10 @@ class Config:
     )
 
     DEBUG = _as_bool(os.getenv("FLASK_DEBUG"), default=False)
+    SQL_KIT_ROOT = os.getenv(
+        "SQL_KIT_ROOT",
+        os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "sql_kit_data")),
+    )
 
     REDIS_HOST = os.getenv("REDIS_HOST", "127.0.0.1")
     REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
